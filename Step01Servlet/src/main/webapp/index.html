@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>index.html</title>
+</head>
+<body>
+	<div class="container">
+		<h1>인덱스 페이지 입니다</h1>
+		<ul>
+			<li><a href="/Step01Servlet/friends">친구 목록</a></li>
+			<li><a href="/Step01Servlet/member?num=1">1번회원 정보 보기</a></li>
+			<li><a href="/Step01Servlet/member?num=2">2번회원 정보 보기</a></li>
+		</ul>
+		
+		<form action="/Step01Servlet/send" method="post">
+			<input type="text" name="name" placeholder="이름 입력..."/>
+			<input type="text" name="msg" placeholder="할말 입력..."/>
+			<button type="submit">전송</button>
+		</form>
+		
+		<form action="/Step01Servlet/send" method="get">
+			<input type="text" name="name" placeholder="이름 입력..."/>
+			<input type="text" name="msg" placeholder="할말 입력..."/>
+			<button type="submit">전송</button>
+		</form>
+		
+		<form action="/Step01Servlet/send.jsp" method="post">
+			<input type="text" name="name" placeholder="이름 입력..."/>
+			<input type="text" name="msg" placeholder="할말 입력..."/>
+			<button type="submit">전송</button>
+		</form>
+		
+		<p>
+			만일 위의 form 에 이름을 "kimgura" , 할말을 "hello" 라고 입력하고 전송을 한다면
+			아래의 링크를 눌러도 동일한 효과를 낸다.
+		</p>
+		<a href="/Step01Servlet/send?name=kimgura&msg=hello">테스트</a>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+

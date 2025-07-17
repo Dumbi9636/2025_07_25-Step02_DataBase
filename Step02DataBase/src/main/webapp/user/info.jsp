@@ -6,7 +6,7 @@
 	//세션에 저장된 userName 을 읽어온다. (이미 로그인된 상태이기 때문에)
 	String userName=(String)session.getAttribute("userName");
 	//DB 에서 사용자 정보를 읽어온다.
-	UserDto dto=new UserDao().getByUserName(userName);
+	UserDto dto=UserDao.getInstance().getByUserName(userName);
 %>    
 <!DOCTYPE html>
 <html>
@@ -16,6 +16,10 @@
 <jsp:include page="/WEB-INF/include/resource.jsp"></jsp:include>
 </head>
 <body>
+	<jsp:include page="/WEB-INF/include/navbar.jsp">
+		<jsp:param value="index" name="thisPage"/>
+	</jsp:include>
+	
 	<div class="container">
 		<h1>회원 가입 정보</h1>
 		<table class="table table-bordered table-striped">
@@ -36,7 +40,12 @@
 			<tr>
 				<th>프로필 이미지</th>
 				<td>
-					<i style="font-size:50px;" class="bi bi-person-circle"></i>
+					<%if(dto.getProfileImage() == null){ %>
+						<i style="font-size:100px;" class="bi bi-person-circle"></i>
+					<%}else{ %>
+						<img src="${pageContext.request.contextPath }/upload/<%=dto.getProfileImage() %>" 
+							style="width:100px;height:100px;border-radius:50%;"/>
+					<%} %>
 				</td>
 			</tr>
 			<tr>
@@ -50,5 +59,6 @@
 		</table>
 		<a href="edit.jsp">개인 정보 수정(이메일, 프로필사진)</a>
 	</div>
+	<jsp:include page="/WEB-INF/include/footer.jsp"></jsp:include>
 </body>
 </html>

@@ -5,8 +5,13 @@
 <head>
 <meta charset="UTF-8">
 <title>/user/edit-password.jsp</title>
+<jsp:include page="/WEB-INF/include/resource.jsp"></jsp:include>
 </head>
 <body>
+	<jsp:include page="/WEB-INF/include/navbar.jsp">
+		<jsp:param value="index" name="thisPage"/>
+	</jsp:include>
+	
 	<div class="container">
 		<h1>비밀번호 수정 양식</h1>
 		<form action="update-password.jsp" method ="post" id="editForm">
@@ -56,5 +61,6 @@
 			}
 		});
 	</script>
+	<jsp:include page="/WEB-INF/include/footer.jsp"></jsp:include>
 </body>
 </html>

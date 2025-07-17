@@ -9,7 +9,7 @@
 	String newPassword=request.getParameter("newPassword");
 	// 2. 세션에 저장된 userName 을 이용해서 가입정보를 DB 에서 불러온다.
 	String userName=(String)session.getAttribute("userName");
-	UserDto dto=new UserDao().getByUserName(userName);
+	UserDto dto=UserDao.getInstance().getByUserName(userName);
 	// 3. 기존 비밀번호와 DB 에 저장된 비밀번호가 일치하는지 확인해서
 	boolean isValid=BCrypt.checkpw(password, dto.getPassword());
 	// 4. 일치한다면 새 비밀번호를 DB 에 수정 반영하고 로그아웃 한다.
@@ -19,7 +19,7 @@
 		// dto 에 담고 
 		dto.setPassword(encodedPwd);
 		// DB에 수정반영
-		new UserDao().updatePassword(dto);  // UserDao 에 updatePassword 메서드 생성했음. 
+		UserDao.getInstance().updatePassword(dto);  // UserDao 에 updatePassword 메서드 생성했음. 
 		// 로그아웃
 		session.removeAttribute("userName");
 	}

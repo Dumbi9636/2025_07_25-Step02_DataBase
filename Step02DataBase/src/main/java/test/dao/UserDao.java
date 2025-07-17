@@ -8,6 +8,113 @@ import test.dto.UserDto;
 import test.util.DbcpBean;
 
 public class UserDao {
+	
+	private static UserDao dao;
+	
+	// static 초기화 블럭 ( 이 클래스가 최초로 사용될때 한번 실행되는 블럭) 
+	static {
+		// static 초기화 작업을 여기서 한다 (UserDao 객체를 생성해서 static 필드에 담는다)
+		dao=new UserDao();
+	}
+	
+	// 외부에서 UserDao 객체를 생성하지 못하도록 생성자를 private 으로 막는다 
+	private UserDao() {}
+	
+	// UserDao 객체의 참조값을 리턴해주는 public static 메소드 제공 
+	public static UserDao getInstance() {
+		// static 필드에 저장된 dao 의 참조값을 리턴해준다. 
+		return dao;
+	}
+	
+	// 이메일과 프로필을 수정하는 메소드
+	public boolean updateEmailProfile(UserDto dto) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		// 변화된 row 의 갯수를 담을 변수 선언하고 0으로 초기화
+		int rowCount = 0;
+
+		try {
+			conn = new DbcpBean().getConn();
+			String sql = """
+					UPDATE users
+					SET email=?, profileImage=?, updatedAt=SYSDATE
+					WHERE userName=?
+					""";
+			pstmt = conn.prepareStatement(sql);
+			// ? 에 순서대로 필요한 값 바인딩 
+			pstmt.setString(1, dto.getEmail());
+			pstmt.setString(2, dto.getProfileImage());
+			pstmt.setString(3, dto.getUserName());
+			// pstmt.setInt(1, dto.getNum()); UPDATE할 때 사용할 참조값 
+			// sql 문 실행하고 변화된(추가된, 수정된, 삭제된) row 의 갯수 리턴받기
+			rowCount = pstmt.executeUpdate();
+
+		} catch (Exception e) { // 예외가 발생시 표시한다 
+			e.printStackTrace();
+		} finally {
+			try {
+				// 메소드 호출하기 전에 null 인지 아닌지 체크, 아닌경우에만 호출하도록 
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+			}
+
+		}
+		// 변화된 rowCount 값을 조사해서 작업의 성공 여부를 알아 낼수 있다.
+		if (rowCount > 0) {
+			return true; // 작업 성공이라는 의미에서 true 리턴하기
+		} else {
+			return false; // 작업 실패라는 의미에서 false 리턴하기 
+		}
+	}
+	
+	// 이메일을 수정하는 메소드
+	public boolean updateEmail(UserDto dto) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		// 변화된 row 의 갯수를 담을 변수 선언하고 0으로 초기화
+		int rowCount = 0;
+
+		try {
+			conn = new DbcpBean().getConn();
+			String sql = """
+					UPDATE users, updatedAt=SYSDATE
+					SET email=?
+					WHERE userName=?
+					""";
+			pstmt = conn.prepareStatement(sql);
+			// ? 에 순서대로 필요한 값 바인딩 
+			pstmt.setString(1, dto.getEmail());
+			pstmt.setString(2, dto.getUserName());
+			// pstmt.setInt(1, dto.getNum()); UPDATE할 때 사용할 참조값 
+			// sql 문 실행하고 변화된(추가된, 수정된, 삭제된) row 의 갯수 리턴받기
+			rowCount = pstmt.executeUpdate();
+
+		} catch (Exception e) { // 예외가 발생시 표시한다 
+			e.printStackTrace();
+		} finally {
+			try {
+				// 메소드 호출하기 전에 null 인지 아닌지 체크, 아닌경우에만 호출하도록 
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+			}
+
+		}
+		// 변화된 rowCount 값을 조사해서 작업의 성공 여부를 알아 낼수 있다.
+		if (rowCount > 0) {
+			return true; // 작업 성공이라는 의미에서 true 리턴하기
+		} else {
+			return false; // 작업 실패라는 의미에서 false 리턴하기 
+		}
+	}
+	
 	// 비밀번호를 수정 반영하는 메소드
 	public boolean updatePassword(UserDto dto) {
 		Connection conn = null;

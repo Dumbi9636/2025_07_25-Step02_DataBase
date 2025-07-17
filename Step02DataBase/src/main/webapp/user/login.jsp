@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="org.mindrot.jbcrypt.BCrypt"%>
 <%@page import="test.dao.UserDao"%>
 <%@page import="test.dto.UserDto"%>
@@ -7,6 +8,10 @@
 	//폼 전송되는 아이디와 비밀번호 추출하기
 	String userName=request.getParameter("userName");
 	String password=request.getParameter("password");
+	// 로그인 후에 가야할 목적지 정보
+	String url=request.getParameter("url");
+	// 로그인 실패를 대비해서 목적지 정보를 인코딩한 결과도 준비한다
+	String encodedUrl=URLEncoder.encode(url, "UTF-8");
 	
 	//아이디 비밀번호가 유효한 정보인지 여부 
 	boolean isValid=false;
@@ -41,17 +46,17 @@
 <meta charset="UTF-8">
 <title>/user/login.jsp</title>
 </head>
-<body>
+<body>  
 	<div class="container">
 		<%if(isValid){ %>
 			<p>
 				<strong><%=userName %></strong> 회원님 로그인 되었습니다.
-				<a href="${pageContext.request.contextPath }/">인덱스 페이지로</a>
+				<a href="<%=url %>">확인</a>
 			</p>
 		<%}else{ %>
 			<p>
 				아이디 혹은 비밀번호가 틀려요!
-				<a href="loginform.jsp">다시 로그인</a>
+				<a href="loginform.jsp?url=<%=encodedUrl%>">다시 로그인</a>
 			</p>
 		<%} %>
 	</div>

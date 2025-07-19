@@ -15,17 +15,27 @@
 	<jsp:include page="/WEB-INF/include/navbar.jsp">
 		<jsp:param value="index" name="thisPage"/>
 	</jsp:include>
+	
+	<div class="container-fluid px-0">
+  		<img src="${pageContext.request.contextPath}/images/dumbi2.png" class="img-fluid w-100" alt="풀폭 배너"  style="max-height:300px; object-fit:cover; border: 3px solid black !important; "/>
+  	</div>
+	
 	<div class="container">
 		<%if(userName != null){ %>
-			<a href="${pageContext.request.contextPath}/user/info.jsp"><%=userName %></a>님 로그인 중...
 		<%} %>
 		<br />
 		<br />
-		<h1 class="text-center">Acorn Academy</h1>
+		<h1 class="text-center" >Acorn Academy</h1>
+		<br />
+		<img src="${pageContext.request.contextPath}/images/dumbi2.png" class="img-fluid rounded d-block mx-auto" alt="메인 배너" style="max-width:500px;"/>
+		<br />
+		<br />
 		<ul class="nav nav-pills justify-content-center my-3">
-			<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath }/member/list.jsp">회원목록</a></li>
-			<li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath }/book/list.jsp">책목록</a></li>
+			<li class="nav-item"><a class="btn btn-warning btn-lg me-3" href="${pageContext.request.contextPath }/member/list.jsp">회원 목록</a></li>
+			<li class="nav-item"><a class="btn btn-warning btn-lg me-3" href="${pageContext.request.contextPath }/book/list.jsp">책 목록</a></li>
+			<li class="nav-item"><a class="btn btn-warning btn-lg me-3" href="${pageContext.request.contextPath}/board/list.jsp">게시글 목록</a></li>
 		</ul>
+		<br />
 		<div id="carouselExampleIndicators" class="carousel slide">
 		  <div class="carousel-indicators">
 		    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>

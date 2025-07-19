@@ -23,7 +23,9 @@
 	</jsp:include>
 	
 	<div class="container">
+		<br />
 		<h1>로그인 페이지</h1>
+		<br />
 		<form action="login.jsp" method="post">
 			<%-- 로그인 성공후에 이동할 url 정보를 추가로 form 전송되도록 한다 --%>
 			<input type="hidden" name="url" value="<%=url %>" />
@@ -31,10 +33,12 @@
 				<label for="userName">아이디</label>
 				<input type="text" name="userName" id="userName"/>
 			</div>
+			<br />
 			<div>
 				<label for="password">비밀번호</label>
 				<input type="password" name="password" id="password"/> 	<!-- input type 을 password로 하면 화면에 보이지 않음.  -->
 			</div>
+			<br />
 			<button type="submit">로그인</button>
 		</form>
 	</div>

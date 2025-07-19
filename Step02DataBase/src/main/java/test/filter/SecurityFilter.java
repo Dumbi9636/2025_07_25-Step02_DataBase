@@ -31,7 +31,7 @@ public class SecurityFilter implements Filter { // Filter 는 java 서블릿 API
 			"/index.jsp",
 			"/user/loginform.jsp","/user/login.jsp",
 			"/user/signup-form.jsp","/user/signup.jsp",
-			"/images"
+			"/images", "/board/list.jsp","/board/view.jsp"
 	);
 	
 	@Override

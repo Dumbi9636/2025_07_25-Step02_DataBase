@@ -7,10 +7,15 @@ public class BoardDto {
 	private String content;
 	private int viewCount;
 	private String createdAt;
+	// 페이징 처리를 위한 필드
+	private int startRowNum;
+	private int endRowNum;
 	
-	// default 생성자는 만들지 않아도 있는 것으로 간주됨
+	// 프로필 이미지 출력을 위한 필드 
+	private String profileImage;
 	
 	// setter, getter
+	
 	public int getNum() {
 		return num;
 	}
@@ -47,4 +52,27 @@ public class BoardDto {
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
 	}
+	public int getStartRowNum() {
+		return startRowNum;
+	}
+	public void setStartRowNum(int startRowNum) {
+		this.startRowNum = startRowNum;
+	}
+	public int getEndRowNum() {
+		return endRowNum;
+	}
+	public void setEndRowNum(int endRowNum) {
+		this.endRowNum = endRowNum;
+	}
+	public String getProfileImage() {
+		return profileImage;
+	}
+	public void setProfileImage(String profileImage) {
+		this.profileImage = profileImage;
+	}
+	
+	
+	// default 생성자는 만들지 않아도 있는 것으로 간주됨
+	
+	
 }

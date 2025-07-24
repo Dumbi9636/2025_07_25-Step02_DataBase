@@ -113,25 +113,27 @@
 			<%} %>
 			</tbody>
 		</table>
-		<ul class="my-pagination">
-			<%-- startPageNum 이 1이 아닐때 이전 page 가 존재하기 때문에... --%>
-			<%if(startPageNum != 1){ %>
-				<li>
-					<a href="list.jsp?pageNum=<%=startPageNum-1 %>">&lsaquo;</a>
-				</li>
-			<%} %>			
-			<%for(int i=startPageNum; i<=endPageNum ; i++){ %>
-				<li>
-					<a class="<%= i==pageNum ? "active":"" %>" href="list.jsp?pageNum=<%=i %>"><%=i %></a>
-				</li>
-			<%} %>
-			<%-- endPageNum 이 totalPageCount 보다 작을때 다음 page 가 있다 --%>		
-			<%if(endPageNum < totalPageCount){ %>
-				<li>
-					<a href="list.jsp?pageNum=<%=endPageNum+1 %>">&rsaquo;</a>
-				</li>
-			<%} %>	
-		</ul>
+		<div class="text-center">
+			<ul class="my-pagination">
+				<%-- startPageNum 이 1이 아닐때 이전 page 가 존재하기 때문에... --%>
+				<%if(startPageNum != 1){ %>
+					<li>
+						<a href="list.jsp?pageNum=<%=startPageNum-1 %>">&lsaquo;</a>
+					</li>
+				<%} %>			
+				<%for(int i=startPageNum; i<=endPageNum ; i++){ %>
+					<li>
+						<a class="<%= i==pageNum ? "active":"" %>" href="list.jsp?pageNum=<%=i %>"><%=i %></a>
+					</li>
+				<%} %>
+				<%-- endPageNum 이 totalPageCount 보다 작을때 다음 page 가 있다 --%>		
+				<%if(endPageNum < totalPageCount){ %>
+					<li>
+						<a href="list.jsp?pageNum=<%=endPageNum+1 %>">&rsaquo;</a>
+					</li>
+				<%} %>	
+			</ul>
+		</div>
 	</div>
 	<jsp:include page="/WEB-INF/include/footer.jsp"></jsp:include>
 </body>

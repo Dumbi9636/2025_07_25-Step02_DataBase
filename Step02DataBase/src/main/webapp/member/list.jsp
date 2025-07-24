@@ -20,10 +20,11 @@
 	<jsp:include page="/WEB-INF/include/navbar.jsp">
 		<jsp:param value="member" name="thisPage"/>
 	</jsp:include>
-	<div class="container">
-		<a href="${pageContext.request.contextPath }/member/insertform.jsp">회원 추가</a>
-		<h1>회원 목록입니다</h1>
-		<table class="table table-striped">
+	
+	<div class="container pt-3 pb-3">
+		<a class="btn btn-outline-dark mt-2 mb-2" href="${pageContext.request.contextPath }/member/insertform.jsp">회원 추가</a>
+		<h1 class= "container pt-3 pb-3">회원 목록입니다</h1>
+		<table class="table table-bordered border-dark">
 			<thead class="table-dark">
 				<tr>
 					<th>번호</th>

@@ -41,7 +41,7 @@
 				<th>프로필 이미지</th>
 				<td>
 					<%if(dto.getProfileImage() == null){ %>
-						<i style="font-size:100px;" class="bi bi-person-circle"></i>
+						<i style="font-size:50px;" class="bi bi-person-circle"></i>
 					<%}else{ %>
 						<img src="${pageContext.request.contextPath }/upload/<%=dto.getProfileImage() %>" 
 							style="width:100px;height:100px;border-radius:50%;"/>

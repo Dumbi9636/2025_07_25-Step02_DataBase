@@ -18,10 +18,11 @@
 	<jsp:include page="/WEB-INF/include/navbar.jsp">
 		<jsp:param value="book" name="thisPage"/>
 	</jsp:include>
-	<div class="container">
-		<a href="insertform.jsp">책 등록</a>
-		<h1>책 목록</h1>
-		<table class="table table-bordered">
+	
+	<div class="container pt-3 pb-3">
+		<a class="btn btn-outline-dark mt-2 mb-2" href="insertform.jsp">책 등록</a>
+		<h1 class= "container pt-3 pb-3">책 목록</h1>
+		<table class="table table-bordered border-dark">
 			<thead class="table-dark">
 				<tr>
 					<th>번호</th>

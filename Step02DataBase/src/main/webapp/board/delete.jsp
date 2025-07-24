@@ -26,8 +26,9 @@
 </head>
 <body>
 	<script>
-		alert("삭제 했습니다!")
-		<a href="${pageContext.request.contextPath}/board/list.jsp"></a>
+	alert("삭제 했습니다!")
+	// 2) 게시판 리스트 페이지로 이동
+    location.href = "${pageContext.request.contextPath}/board/list.jsp";
 	</script>
 </body>
 </html>

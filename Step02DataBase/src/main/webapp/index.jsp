@@ -19,7 +19,6 @@
 	<div class="container-fluid px-0">
   		<img src="${pageContext.request.contextPath}/images/dumbi2.png" class="img-fluid w-100" alt="풀폭 배너"  style="max-height:300px; object-fit:cover; border: 3px solid black !important; "/>
   	</div>
-	
 	<div class="container">
 		<%if(userName != null){ %>
 		<%} %>

@@ -66,7 +66,50 @@ public class BoardDao {
 			return false; // 작업 실패라는 의미에서 false 리턴하기 
 		}
 	}
-	
+	// 검색 키워드에 부합하는 글의 갯수를 리턴하는 메소드
+		public int getCountByKeyword(String keyword) {
+			// count 값을 담을 지역변수 선언 
+			int count=0;
+			
+			Connection conn = null;
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			try {
+				conn = new DbcpBean().getConn();
+				// 실행할 sql 문 
+				String sql = """
+						SELECT MAX(ROWNUM) AS count
+						FROM board
+						WHERE title LIKE '%' || ? || '%' OR content LIKE '%' || ? || '%'
+						""";
+				pstmt = conn.prepareStatement(sql);
+				// ? 값에 바인딩
+				pstmt.setString(1, "keyword");
+				pstmt.setString(2, "keyword");
+				// select 문 실행하고 결과를 ResultSet 으로 받아온다. 
+				rs = pstmt.executeQuery();
+				// 반복문 돌면서 ResultSet 에 담긴 데이터를 추출해서 어떤 객체에 담는다. 
+				if (rs.next()) {
+					count=rs.getInt("count");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					// 메소드 호출하기 전에 null 인지 아닌지 체크, 아닌경우에만 호출하도록 
+					// 닫아줄때 위에서 객체를 선언한 conn, pstmt, rs 순의 반대 순으로 닫아준다
+					// rs -> pstmt -> conn 
+					if (rs != null)
+						pstmt.close();
+					if (pstmt != null)
+						pstmt.close();
+					if (conn != null)
+						conn.close();
+				} catch (Exception e) {}
+			}
+			return count;
+		}
+		
 	// 전체 글의 갯수를 리턴하는 메소드
 	public int getCount() {
 		// count 값을 담을 지역변수 선언 
@@ -107,6 +150,65 @@ public class BoardDao {
 			} catch (Exception e) {}
 		}
 		return count;
+	}
+	// 특정 page 와 keyword 에 해당하는 row 만 select 해서 리턴하는 메소드
+	// BoardDto 객체에 startRowNum 과 endRowNum 을 담아와서 select
+	public List<BoardDto> selectPageByKeyword(BoardDto dto) {
+		List<BoardDto> list=new ArrayList<>();
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = new DbcpBean().getConn();
+			// 실행할 sql 문 
+			String sql = """
+					SELECT *
+					FROM
+						(SELECT result1.*, ROWNUM AS rnum
+						FROM
+							(SELECT num, writer, title, viewCount, createdAt
+							FROM board
+							WHERE title LIKE '%' || ? || '%' OR content LIKE '%' || ? || '%'
+							ORDER BY num DESC) result1)
+					WHERE rnum BETWEEN ? AND ?
+					""";
+			pstmt = conn.prepareStatement(sql);
+			// ? 값에 바인딩
+			pstmt.setString(1, dto.getKeyword());
+			pstmt.setString(2, dto.getKeyword());
+			pstmt.setInt(3, dto.getStartRowNum());
+			pstmt.setInt(4, dto.getEndRowNum());
+			// select 문 실행하고 결과를 ResultSet 으로 받아온다. 
+			rs = pstmt.executeQuery();
+			// 반복문 돌면서 ResultSet 에 담긴 데이터를 추출해서 어떤 객체에 담는다. 
+			while (rs.next()) {
+				// 커서가 위치한 곳의 회원정보를 저장할 MemberDto 객체 생성 
+				BoardDto dto2=new BoardDto();
+				dto2.setNum(rs.getInt("num"));
+				dto2.setWriter(rs.getString("writer"));
+				dto2.setTitle(rs.getString("title"));
+				dto2.setViewCount(rs.getInt("viewCount"));
+				dto2.setCreatedAt(rs.getString("createdAt"));
+				
+				list.add(dto2);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				// 메소드 호출하기 전에 null 인지 아닌지 체크, 아닌경우에만 호출하도록 
+				// 닫아줄때 위에서 객체를 선언한 conn, pstmt, rs 순의 반대 순으로 닫아준다
+				// rs -> pstmt -> conn 
+				if (rs != null)
+					pstmt.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {}
+		}
+		return list;
 	}
 	
 	// 특정 page 에 해당하는 row 만 selelct 해서 리턴하는 메소드
@@ -313,12 +415,16 @@ public class BoardDao {
 			conn = new DbcpBean().getConn();
 			//실행할 sql문
 			String sql = """
-				SELECT writer, title, content, viewCount,
-					TO_CHAR(b.createdAt, 'YY"년" MM"월" dd"일" HH24:MI') AS createdAt,
-					profileImage
-				FROM board b
-				INNER JOIN users u ON b.writer = u.userName
-				WHERE b.num=?
+				SELECT *
+				FROM	
+					(SELECT b.num, writer, title, content, viewCount, 
+						TO_CHAR(b.createdAt, 'YY"년" MM"월" DD"일" HH24:MI') AS createdAt, 
+						profileImage,
+						LAG(b.num, 1, 0) OVER (ORDER BY b.num DESC) AS prevNum,
+						LEAD(b.num, 1, 0) OVER (ORDER BY b.num DESC) AS nextNum
+					FROM board b
+					INNER JOIN users u ON b.writer = u.userName) 
+				WHERE num=?
 			""";
 			pstmt = conn.prepareStatement(sql);
 			//? 에 값 바인딩
@@ -334,6 +440,8 @@ public class BoardDao {
 				dto.setViewCount(rs.getInt("viewCount"));
 				dto.setCreatedAt(rs.getString("createdAt"));
 				dto.setProfileImage(rs.getString("profileImage"));
+				dto.setPrevNum(rs.getInt("prevNum"));
+				dto.setNextNum(rs.getInt("nextNum"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

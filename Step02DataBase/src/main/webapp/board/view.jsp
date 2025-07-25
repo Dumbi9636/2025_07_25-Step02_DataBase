@@ -129,7 +129,15 @@
 		<div class="comments">
 		<%for(CommentDto tmp:commentList){ %>
 		<div class="card border border-dark mb-3 ">
-            <div class="card-body d-flex">
+			<%if(tmp.getDeleted().equals("yes")){ %>
+				<div class="card-body bg-light text-muted rounded">삭제된 댓글입니다</div>
+			<%}else{ %>
+			<div class="card-body d-flex flex-column flex-sm-row position-relative">
+            	<%-- 댓글 작성자가 로그인된 userName 과 같을때만 삭제버튼 출력 --%>
+            	<%if(tmp.getWriter().equals(userName)){ %>
+            		<button data-num="<%=tmp.getNum() %>" class="btn-close position-absolute top-0 end-0 m-2" ></button>
+            	<%} %>
+            	
             	<%if(tmp.getProfileImage() == null){ %>
 					<i style="font-size:50px;" class="bi bi-person-circle me-3 align-self-center"></i>
             	<%}else{ %>
@@ -139,7 +147,7 @@
                 	 style="width:50px; height:50px;">
             	<%} %>
                 <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between">
                                 <div >
                                         <strong><%=tmp.getWriter() %></strong>
                                         <small><span>@<%=tmp.getTargetWriter() %></span></small>
@@ -147,8 +155,23 @@
                                 <small><%=tmp.getCreatedAt() %></small>
                         </div>
                         <pre><%=tmp.getContent() %></pre>
-                        <%if(tmp.getWriter().equals(userName)){ %>
                         
+                        <%-- 댓글 작성자가 로그인된 userName 과 같으면 수정폼, 다르면 댓글폼을 출력한다 --%>
+                        <%if(tmp.getWriter().equals(userName)){ %>
+                         <!-- 수정 버튼 (본인에게만 보임) -->
+                           <button class="btn btn-sm btn-outline-dark mb-2 edit-btn">수정</button>  
+                           
+                           <!-- 댓글 입력 폼 (처음에는 숨김) -->
+                           <div class="d-none form-div">
+                               <form action="comment-update.jsp" method="post">
+                               	   <!-- 댓글을 수정하기 위한 댓글의 번호, 이 페이지로 다시 돌아오기 위한 parentNum 도 같이 전송되도록 -->
+                                   <input type="hidden" name="num" value="<%=tmp.getNum() %>" />
+                                   <input type="hidden" name="parentNum" value="<%=num %>" />
+                                   <textarea name="content" class="form-control mb-2" rows="2" ><%=tmp.getContent() %></textarea>
+                                   <button type="submit" class="btn btn-sm btn-dark mb-2">수정 완료</button>
+                                   <button type="reset" class="btn btn-sm btn-secondary cancel-edit-btn mb-2">취소</button>
+                               </form>
+                           </div>
                         <%}else{ %>
                         <!-- 댓글 입력 폼(처음에는 숨김) -->
                         <div class="d-none form-div">
@@ -160,12 +183,13 @@
                             </form>
                         </div>
                         <%} %>
-                         <button class="btn btn-sm btn-outline-dark mb-3  show-reply-btn">댓글</button>
+                        <button class="btn btn-sm btn-outline-dark mb-2 show-reply-btn">답글</button>
                 </div>
-            </div>
-        </div>
+            </div><!-- .card-body -->
+			<%} %>
+        </div><!-- .card -->
 		<%} %>
-		</div>
+		</div><!-- .container -->
 		
 		<!-- 다음글, 이전글 -->
 		<div class="text-center mt-2">
@@ -185,6 +209,61 @@
 	
 	//클라이언트가 로그인 했는지 여부
 	const isLogin = <%=isLogin %>;
+	
+	// 삭제 버튼을 눌렀을때 
+    document.querySelectorAll(".btn-close").forEach(item=>{
+        item.addEventListener("click", ()=>{
+        // data-num 속성에 출력된 삭제할 댓글의 번호값을 변수에 담기 
+        const num=item.getAttribute("data-num") //  getAttribute() : ( )의 속성값을 가져오겠다는 의미
+        const isDelete=confirm(num+"번 댓글을 삭제 하시겠습니까?")
+        if(isDelete){
+        	// "delete.jsp?num=삭제 할 댓글번호 & parentNum=원글의 번호" 형식의 요청이 되도록 한다.
+        	// 달라{ } 는 jsp 가 해석하지 않도록 \${ } 역슬래시를 붙여서 작성한다. 
+        	location.href=`comment-delete.jsp?num=\${num}&parentNum=<%=num %>`
+        }
+        // formDiv 에 d-none 클래스 추가해서 
+         formDiv.classList.add("d-none");
+         // formDiv 의 이전 형제요소(댓글버튼)에 d-none 추가  
+         formDiv.previousElementSibling.classList.remove("d-none");
+        });
+    });
+
+    // 클래스명이 edit-btn 인 모든 버튼에 "click" 이벤트리스너 등록
+    document.querySelectorAll(".edit-btn").forEach(item=>{
+        item.addEventListener("click", ( )=>{
+            // 클릭한 버튼의 다음 형제 요소의 class 목록에서 d-none 을 제거
+            item.nextElementSibling.classList.remove("d-none");
+            // 클릭한 버튼의 class 목록에 d-none 을 추가 
+            item.classList.add("d-none");   
+         	
+            // 댓글(답글) 버튼도 숨기기
+            const parentCard = item.closest(".card"); // 카드 하나 전체
+            const replyBtn = parentCard.querySelector(".show-reply-btn"); // 댓글 버튼 찾아서
+            if(replyBtn){
+                replyBtn.classList.add("d-none");
+            }
+        });
+     	
+    });
+    // 취소 버튼에 d-none 등록(querySelectorAll)
+    document.querySelectorAll(".cancel-edit-btn").forEach(item=>{
+        // 취소 버튼을 눌렀을때 이벤트 리스너 등록
+        item.addEventListener("click", ()=>{
+            // 가장 가까운(closest) 부모 요소중에 클래스 속성이 form-div 인요소
+            const formDiv=item.closest(".form-div");
+            // formDiv 에 d-none 클래스 추가해서 
+            formDiv.classList.add("d-none");
+            // formDiv 의 이전 형제요소(댓글버튼)에 d-none 추가  
+            formDiv.previousElementSibling.classList.remove("d-none");
+         	
+            // 댓글(답글) 버튼 다시 보이게
+            const parentCard = item.closest(".card");
+            const replyBtn = parentCard.querySelector(".show-reply-btn");
+            if(replyBtn){
+                replyBtn.classList.remove("d-none");
+            }
+        });
+    });
 	
 	document.querySelector("#commentContent").addEventListener("input", ()=>{
 		//원글의 댓글 입력란에 입력했을때 만일 로그인 하지 않았다면

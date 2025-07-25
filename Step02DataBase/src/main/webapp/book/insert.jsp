@@ -15,7 +15,7 @@
 	//3. dao 객체를 이용해서 DB 에 저장
 	boolean isSuccess=new BookDao().insert(dto);
 	//4. 응답
-%>    
+%>
 <!DOCTYPE html>
 <html>
 <head>

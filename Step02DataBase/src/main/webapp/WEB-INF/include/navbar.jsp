@@ -27,7 +27,7 @@
 						<a class="nav-link fw-bolder" <%=thisPage.equals("board") ? "active":""%> href="${pageContext.request.contextPath }/board/list.jsp">Board</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link fw-bolder" <%=thisPage.equals("goods") ? "active":""%> href="${pageContext.request.contextPath }/goods/list.jsp">goods</a>
+						<a class="nav-link fw-bolder" <%=thisPage.equals("gallery") ? "active":""%> href="${pageContext.request.contextPath }/gallery/list.jsp">gallery</a>
 					</li>
 				</ul>
 				 <!-- 오른쪽 사용자 메뉴 -->

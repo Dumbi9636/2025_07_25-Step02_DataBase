@@ -11,6 +11,7 @@
 	int num=Integer.parseInt(request.getParameter("num"));
 	// DB 에서 해당글의 자세한 정보를 얻어낸다.
 	BoardDto dto=BoardDao.getInstance().getByNum(num);
+	
 	// 로그인된 userName(null 일 가능성이 있음), session 영역에 userName 이 있는지 읽어와서
 	String userName=(String)session.getAttribute("userName");
 	// 만일 본인 글 자세히 보기가 아니면 조회수 1을 증가시킨다
@@ -30,6 +31,12 @@
 <meta charset="UTF-8">
 <title>/board/view.jsp</title>
 <jsp:include page="/WEB-INF/include/resource.jsp"></jsp:include>
+<style>
+	/* 대댓글이 처음에는 보이지 않도록 하기 위해 */
+	.re-re{
+		display:none;
+	}
+</style>
 </head>
 <body>
 	<jsp:include page="/WEB-INF/include/navbar.jsp">
@@ -128,11 +135,26 @@
 		<!-- 댓글 목록을 출력하기 -->
 		<div class="comments">
 		<%for(CommentDto tmp:commentList){ %>
-		<div class="card border border-dark mb-3 ">
+		<%-- 대댓글은 자신의 글번호와 댓글의 그룹번호가 다르다. 그런 경우 왼쪽 마진을 부여한다 --%>
+		 <div class="card border border-dark mb-3 <%=tmp.getNum() == tmp.getGroupNum() ? "" : "ms-5 re-re"%>">
 			<%if(tmp.getDeleted().equals("yes")){ %>
 				<div class="card-body bg-light text-muted rounded">삭제된 댓글입니다</div>
 			<%}else{ %>
 			<div class="card-body d-flex flex-column flex-sm-row position-relative">
+			
+				<%-- 댓글의 갯수가 0이 아니고, 원글의 댓글에만 부여한다 --%>
+				<%if(tmp.getReplyCount() != 0 && tmp.getNum() == tmp.getGroupNum()){ %>
+		        	<button class="dropdown-btn btn btn-warning btn-sm position-absolute"
+		        		style="bottom:16px; right:16px;">
+		            	<i class="bi bi-caret-down"></i>
+		            	답글 <%=tmp.getReplyCount() %> 개
+		            </button>
+		        <%} %>
+		        
+				<%-- 대댓글 작성 시 표시되는 화살표 UI --%>
+				<%if(tmp.getNum() != tmp.getGroupNum()){ %>
+					<i class="bi bi-arrow-return-right position-absolute" style="top:0;left:-30px"></i>
+					<%} %>
             	<%-- 댓글 작성자가 로그인된 userName 과 같을때만 삭제버튼 출력 --%>
             	<%if(tmp.getWriter().equals(userName)){ %>
             		<button data-num="<%=tmp.getNum() %>" class="btn-close position-absolute top-0 end-0 m-2" ></button>
@@ -152,6 +174,7 @@
                                         <strong><%=tmp.getWriter() %></strong>
                                         <small><span>@<%=tmp.getTargetWriter() %></span></small>
                                 </div>
+                               
                                 <small><%=tmp.getCreatedAt() %></small>
                         </div>
                         <pre><%=tmp.getContent() %></pre>
@@ -173,22 +196,27 @@
                                </form>
                            </div>
                         <%}else{ %>
-                        <!-- 댓글 입력 폼(처음에는 숨김) -->
-                        <div class="d-none form-div">
-                            <form action="comment-save.jsp" method="post">
-                                <textarea class="form-control mb-3" rows="2" 
+						  <button class="btn btn-sm btn-outline-dark mb-2 show-reply-btn">댓글</button>
+                       		<!-- 대댓글 입력 폼(처음에는 숨김) -->
+                        	<div class="d-none form-div">
+                            	<form action="save-comment.jsp" method="post">
+                            		<!-- 원글의 글번호, 댓글 대상자의 userName, 댓글의 그룹번호도 같이 전송해야한다
+                            		input type = "hidden"으로 들고간다.  -->
+                            	<input type="hidden" name="parentNum" value="<%=dto.getNum() %>" />
+                            	<input type="hidden" name="targetWriter" value="<%=tmp.getWriter() %>" />
+                            	<input type="hidden" name="groupNum" value="<%=tmp.getGroupNum() %>"/>
+                                <textarea name="content" class="form-control mb-3" rows="2" 
                                         placeholder="댓글을 입력하세요"></textarea>
                                 <button type="submit" class="btn btn-sm btn-dark">등록</button>
                                 <button type="reset" class="btn btn-sm btn-secondary cancel-reply-btn">취소</button>
                             </form>
                         </div>
                         <%} %>
-                        <button class="btn btn-sm btn-outline-dark mb-2 show-reply-btn">답글</button>
                 </div>
             </div><!-- .card-body -->
 			<%} %>
-        </div><!-- .card -->
-		<%} %>
+         </div><!-- .card -->
+		 <%} %>
 		</div><!-- .container -->
 		
 		<!-- 다음글, 이전글 -->
@@ -209,6 +237,37 @@
 	
 	//클라이언트가 로그인 했는지 여부
 	const isLogin = <%=isLogin %>;
+	
+	// 대댓글 보기 버튼을 눌렀을때 실행할 함수 등록 
+	document.querySelectorAll(".dropdown-btn").forEach(item => {
+ 		  item.addEventListener("click", (e) => {
+ 			
+ 			// click 이벤트가 발생한 그 버튼의 자손요소 중에 caret up 또는 caret down 요소를 찾는다. 
+ 			const caret = item.querySelector(".bi-caret-up, .bi-caret-down");
+ 			if (caret) {
+ 			  // 해당 아이콘 클래스들을 toggle 한다. 
+ 			  caret.classList.toggle("bi-caret-down");
+ 			  caret.classList.toggle("bi-caret-up");
+ 			}
+ 			
+ 		    // 1. 버튼의 두 단계 부모 요소로 이동
+ 		    const grandParent = item.parentElement.parentElement;
+			// 2. 두단계 부모 요소의 바로 다음 형제 요소의 참조값을 얻어낸다 
+ 		 	let next = grandParent.nextElementSibling;
+			// 3. 반복문돌면서 
+	   		while (next) {
+	   		  // 만일 re-re 클래스가 있다면 	
+	   		  if (next.classList.contains("re-re")) {
+	   			// d-block 클래스를 토글시켜서 보였다 숨겼다를 반복시킨다
+	   		    next.classList.toggle("d-block");
+	   		  }else{ //존재하지 않으면
+	   			  break; // 반복문 탈출
+	   		  }
+	   		  // 다음 형제 요소의 참조값 얻어내기
+	   		  next = next.nextElementSibling;s
+	   		}
+ 		  });
+  	});
 	
 	// 삭제 버튼을 눌렀을때 
     document.querySelectorAll(".btn-close").forEach(item=>{

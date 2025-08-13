@@ -1,3 +1,6 @@
-RepositorySearchDialogSearchPath=C\:\\Users\\user\\git
+RepositorySearchDialogSearchPath=C\:\\playground\\project_work2\\project01_erp
+commit_dialog_history_messages=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<messages>\r\n<message>board \uAC8C\uC2DC\uD310 \uD398\uC774\uC9D5 \uCC98\uB9AC</message>\r\n<message>fetch \uC804 commit</message>\r\n<message>- \uC9C0\uC810, \uBCF8\uC0AC \uD68C\uC6D0\uAC00\uC785 \uBC0F \uB85C\uADF8\uC778 \uBD84\uAE30 -</message>\r\n<message>Merge remote-tracking branch &apos;upstream/develop&apos; into feature/board/junil&\#x0A;</message>\r\n<message>delete.jsp \uCD94\uAC00</message>\r\n</messages>
 eclipse.preferences.version=1
 repositories_view_filters=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<FilterCache/>
+resourcehistory_graph_split=500,500
+resourcehistory_rev_split=700,300

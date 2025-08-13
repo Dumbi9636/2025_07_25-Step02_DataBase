@@ -1,2 +1,3 @@
-2025/07/24-16:47:05.628 2ec4 Creating DB C:\playground\git_repository\web_work\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\shared_proto_db since it was missing.
-2025/07/24-16:47:05.634 2ec4 Reusing MANIFEST C:\playground\git_repository\web_work\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\shared_proto_db/MANIFEST-000001
+2025/08/13-10:09:05.969 3034 Reusing MANIFEST C:\playground\git_repository\web_work\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\shared_proto_db/MANIFEST-000001
+2025/08/13-10:09:05.969 3034 Recovering log #3
+2025/08/13-10:09:05.970 3034 Reusing old log C:\playground\git_repository\web_work\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\shared_proto_db/000003.log 

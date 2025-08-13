@@ -15,7 +15,6 @@
 	<jsp:include page="/WEB-INF/include/navbar.jsp">
 		<jsp:param value="index" name="thisPage"/>
 	</jsp:include>
-	
 	<div class="container-fluid px-0">
   		<img src="${pageContext.request.contextPath}/images/dumbi2.png" class="img-fluid w-100" alt="풀폭 배너"  style="max-height:300px; object-fit:cover; border: 3px solid black !important; "/>
   	</div>
@@ -30,9 +29,12 @@
 		<br />
 		<br />
 		<ul class="nav nav-pills justify-content-center my-3">
-			<li class="nav-item"><a class="btn btn-warning btn-lg me-3" href="${pageContext.request.contextPath }/member/list.jsp">회원 목록</a></li>
-			<li class="nav-item"><a class="btn btn-warning btn-lg me-3" href="${pageContext.request.contextPath }/book/list.jsp">책 목록</a></li>
+			<li class="nav-item"><a class="btn btn-warning btn-lg me-3" href="${pageContext.request.contextPath}/member/list.jsp">회원 목록</a></li>
+			<li class="nav-item"><a class="btn btn-warning btn-lg me-3" href="${pageContext.request.contextPath}/book/list.jsp">책 목록</a></li>
 			<li class="nav-item"><a class="btn btn-warning btn-lg me-3" href="${pageContext.request.contextPath}/board/list.jsp">게시글 목록</a></li>
+			<li class="nav-item"><a class="btn btn-warning btn-lg me-3" href="${pageContext.request.contextPath}/admin/index.jsp">관리자</a></li>
+			<li class="nav-item"><a class="btn btn-warning btn-lg me-3" href="${pageContext.request.contextPath}/staff/index.jsp">직원</a></li>
+			<li class="nav-item"><a class="btn btn-warning btn-lg me-3" href="${pageContext.request.contextPath}/test/file-form.jsp">파일 업로드 테스트</a></li>
 		</ul>
 		<br />
 		<div id="carouselExampleIndicators" class="carousel slide">

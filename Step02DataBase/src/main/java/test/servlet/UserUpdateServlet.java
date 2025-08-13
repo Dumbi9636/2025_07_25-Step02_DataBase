@@ -23,7 +23,7 @@ import test.dto.UserDto;
 @MultipartConfig(
 		fileSizeThreshold = 1024*1024*10, // 업로드 처리하기 위한 메모리 사이즈(10 Mega byte)
 		maxFileSize = 1024*1024*50, // 업로드되는 최대 파일 사이즈(50 Mega byte)
-		maxRequestSize = 1024*1024*60 // 이 요청의 최대 사이즈(60 Mega byte)
+		maxRequestSize = 1024*1024*60 // 이 요청의 최대 사이즈(60 Mega byte) 다른 데이터들의 사이즈도 고려한 것 
 )
 
 public class UserUpdateServlet extends HttpServlet {
@@ -89,8 +89,11 @@ public class UserUpdateServlet extends HttpServlet {
 			// dao 의 email 만 수정하는 메소드를 이용해서 수정 반영
 			UserDao.getInstance().updateEmail(dto);
 		}
+		
 		// 리다일렉트 응답
 		String cPath=req.getContextPath();
 		resp.sendRedirect(cPath+"/user/info.jsp");
 	}
+	
+	
 }

@@ -10,10 +10,10 @@
 	
 	// 글 작성자와 로그인된 userName 이 동일한지 비교해서 동일하지 않으면 에러를 응답한다
 	String writer=BoardDao.getInstance().getByNum(num).getWriter(); // 수정할 글 작성자
-	String userName=(String)session.getAttribute("userName");
-	if(!writer.equals(userName)){
+	String user_name=(String)session.getAttribute("user_name");
+	if(!writer.equals(user_name)){
 		// 에러 페이지 응답  SC_FORBIDDEN = 403 Error
-		response.sendError(HttpServletResponse.SC_FORBIDDEN, "남의 글 수정하면 혼난다!");
+		response.sendError(HttpServletResponse.SC_FORBIDDEN, "다른 사용자의 글은 수정할 수 없습니다.");
 		return; // 메소드 종료
 	}
 	

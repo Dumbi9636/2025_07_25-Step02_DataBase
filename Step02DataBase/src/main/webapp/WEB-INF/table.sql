@@ -1,3 +1,22 @@
+CREATE TABLE gallery(
+	num NUMBER PRIMARY KEY,
+	title VARCHAR2(100) NOT NULL,
+	writer VARCHAR2(20) NOT NULL,
+	content CLOB,
+	createdAt DATE DEFAULT SYSDATE
+);
+-- gallery 테이블은 board_seq를 공유하기
+
+CREATE TABLE gallery_image(
+	num NUMBER PRIMARY KEY,
+	gallery_num NUMBER REFERENCES gallery(num),
+	saveFileName VARCHAR2(100) NOT NULL, -- 사진을 보여주는 용도로만 사용할 예정(저장된 파일명만 있으면 된다 다운로드 추가해주려면 orgFileName, FileSize도 추가해줘야함)
+	createdAt DATE DEFAULT SYSDATE
+);
+
+CREATE SEQUENCE gallery_image_seq;
+
+
 SELECT * FROM comments;
 
 CREATE TABLE comments(
@@ -29,8 +48,8 @@ CREATE TABLE users(
 	userName VARCHAR2(20) UNIQUE, -- 아이디
 	password VARCHAR2(100) NOT NULL, -- 비밀번호
 	email VARCHAR2(50) UNIQUE, -- 이메일
-	profileImage VARCHAR2(100), -- 프로필 이미지 정보
-	role VARCHAR2(10), DEFAULT 'USER', -- 역할 USER(일반사용자) | STAFF(직원) | ADMIN(최고권한관리자)
+	profileImage VARCHAR2(100), -- 프로필 이미지 정보(처음 가입시 null)
+	role VARCHAR2(10), DEFAULT 'ROLE_USER', -- 역할 ROLE_USER(일반사용자) | ROLE_STAFF(직원) | ROLE_ADMIN(최고권한관리자)
 	updateAt DATE, -- 수정 날짜
 	createAt DATE -- 가입 날짜
 );

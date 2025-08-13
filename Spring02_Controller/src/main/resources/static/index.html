@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>index.html</title>
+</head>
+<body>
+	<div class="container">
+		<h1>Spring Boot 인덱스 페이지</h1>
+		<img src="/images/Spain.png" />
+		<ul>
+			<li><a href="/fortune">오늘의 운세</a></li>
+			<li><a href="/person-today">오늘의 인물</a></li>
+		</ul>
+		<form action="/send" method="post">
+			<input type="text" name="msg" placeholder="할말 입력..." />
+			<button type="submit">전송</button>
+		</form>
+		<form action="/send2" method="post">
+			<input type="text" name="msg" placeholder="할말 입력..." />
+			<button type="submit">전송2</button>
+		</form>
+	</div>
+</body>
+</html>

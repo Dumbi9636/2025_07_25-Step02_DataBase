@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/templates/home.html</title>
+<th:block th:insert="/include/resource"></th:block>
+</head>
+<body>
+	<div class="container mt-5">
+	
+	    <!-- 헤더 -->
+	    <div class="text-center mb-5">
+	        <h1 class="fw-bold">인덱스 페이지</h1>
+	        <p class="text-muted">회원/도서 관리 및 공지사항을 확인하세요</p>
+	    </div>
+	
+	    <!-- 메뉴 카드 -->
+	    <div class="row justify-content-center mb-5">
+	        <div class="col-md-4">
+	            <div class="card shadow-sm h-100 text-center">
+	                <div class="card-body">
+	                    <h5 class="card-title">👤 회원 관리</h5>
+	                    <p class="card-text text-muted">회원 목록을 조회하고 관리할 수 있습니다.</p>
+	                    <a th:href="@{/member/list}" 
+	                       class="btn btn-warning w-100">회원 목록 보기</a>
+	                </div>
+	            </div>
+	        </div>
+	
+	        <div class="col-md-4 mt-4 mt-md-0">
+	            <div class="card shadow-sm h-100 text-center">
+	                <div class="card-body">
+	                    <h5 class="card-title">📖 도서 관리</h5>
+	                    <p class="card-text text-muted">도서 목록을 확인하고 관리할 수 있습니다.</p>
+	                    <a th:href="@{/book/list}" 
+	                       class="btn btn-primary w-100">도서 목록 보기</a>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	
+	    <!-- 공지사항 -->
+	    <div class="card shadow-sm">
+	        <div class="card-header text-center fw-bold fs-5 bg-dark text-white">
+	            공지사항
+	        </div>
+	        <ul class="list-group list-group-flush text-center">
+	        	<li th:each="tmp : ${notice}" class="list-group-item">[[${tmp}]]</li>
+	        </ul>
+	    </div>
+	    
+	</div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>/board/list.html</title>
+<th:block th:insert="~{/include/resource :: bootstrap}"></th:block>
+</head>
+<body>
+	<th:block th:insert="~{/include/navbar :: nav('board')}"></th:block>
+	
+	<div class="container">
+		<nav>
+			<ul class="breadcrumb mt-3">
+				<li class="breadcrumb-item">
+					<a th:href="@{/}">Home</a>
+				</li>
+				<li class="breadcrumb-item">
+					게시판
+				</li>
+				<li class="breadcrumb-item active">
+					<a th:href="@{/board/new-form}">새글 작성</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	
+	<div class="container pt-3 pb-3">
+		<a class="btn btn-outline-dark mt-2 mb-2" th:href="@{/board/new-form}">새글 작성
+		<i class="bi bi-pencil-square"></i></a>
+		
+		<h1 class= "container pt-3 pb-3">게시글 목록</h1>
+		<!-- 행을 만들고 -->
+		<div class="row my-3">
+			<!-- 3/12인 칼럼을 만들고 margin-start:auto 를 부여해서 왼쪽 마진을 자동 부여한다-->
+			<div class="col-md-6 ms-auto">
+				<form th:action="@{/board/list}" method="get">
+					<div class="input-group gap-1">
+						<!-- 검색 조건 -->
+						<select name="search" class="form-select border border-dark">
+							<option th:selected="${dto.search == 'title_content'}" value="title_content">제목+내용</option>
+							<option th:selected="${dto.search == 'title'}" value="title">제목</option>
+							<option th:selected="${dto.search == 'writer'}" value="writer">작성자</option>
+						</select>
+						
+						<input type="text" name="keyword"
+						       th:value="${keyword != null and !#strings.isEmpty(keyword) ? 'dto.keyword' : ''}"
+						       class="form-control border border-dark me-1"
+						       placeholder="검색어 입력..." />
+						<button type="submit" class="btn btn-outline-secondary">
+						<i class="bi bi-search"></i>
+							<span class="visually-hidden">검색</span>
+						</button>
+						<a class="btn btn-outline-danger" th:href="@{/board/list}">
+						<i class="bi bi-arrow-clockwise"></i>
+							<span class="visually-hidden">새로고침</span>
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+		<p th:if="${dto.keyword != null}">
+			<strong th:text="${dto.keyword}"></strong> 에 대한 검색결과
+			<strong th:text="${dto.totalRow}"></strong> 개 
+		</p>
+		<table class="table table-bordered  border-dark">
+			<thead class="table-dark">
+			<tr>
+				<th>글 번호</th>
+				<th>작성자</th>
+				<th>제목</th>
+				<th>조회수</th>
+				<th>작성일</th>
+			</tr>
+			</thead>
+			<tbody>
+				<tr th:each="tmp : ${dto.list} ">
+					<td th:text="${tmp.num}"></td>
+					<td th:text="${tmp.writer}"></td>
+					<td>
+						<a th:href="@{|/board/view?num=${tmp.num}${dto.query}|}" 
+						   th:text="${tmp.title}"></a>
+					</td>
+					<td th:text="${tmp.viewCount}"></td>
+					<td th:text="${tmp.createdAt}"></td>
+				</tr>
+			</tbody>
+		</table>
+			<ul class="pagination justify-content-center mt-2">
+				<!--/* startPageNum 이 1이 아닐때 이전 page 가 존재하기 때문에...
+						@{'/board/list?pageNum=' +${dto.startPageNum-1} + ${dto.query}}
+						위와 같이 작성하거나 혹은 문자열을 이어 붙일때는 아래와 같이하면 좀 더 간편하다
+						@{|/board/list?pageNum=${dto.startPageNum-1}${dto.query}|}
+				*/-->
+					<li th:if="${dto.startPageNum != 1}" class="page-item">
+						<a class="page-link text-light bg-dark" 
+						   th:href="@{|/board/list?pageNum=${dto.startPageNum-1}${dto.query}|}">&lsaquo;</a>
+					</li>	
+					<li th:each="i :${#numbers.sequence(dto.startPageNum, dto.endPageNum)}" class="page-item">
+						<a th:href="@{|/board/list?pageNum=${i}${dto.query}|}"
+					       class="page-link text-light bg-dark"
+					       th:classappend="${i == dto.pageNum} ? ' active' : ''"
+					       th:text="${i}"></a>
+					</li>
+				
+				<!--/*endPageNum 이 totalPageCount 보다 작을때 다음 page 가 있다 */-->	
+					<li th:if="${endPageNum < totalPageCount}" class="page-item">
+						<a class="page-link text-light bg-dark" 
+						   th:href="@{/board/list(pageNum=${endPageNum+1}, keyword=${keyword})}">&rsaquo;</a>
+					</li>
+			</ul>
+		</div>
+		<th:block th:insert="~{/include/footer :: footer}"></th:block>
+</body>
+</html>

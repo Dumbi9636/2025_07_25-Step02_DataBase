@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="user">
+	<!-- 자주 사용하는 칼럼의 이름을 미리 정의해놓고 참조해서 사용하기 -->
+	<sql id="columnName">
+		num, userName, password, email, profileImage, role, updatedAt, createdAt
+	</sql>
+
+	<update id="update" parameterType="com.example.spring08.dto.UserDto">
+		UPDATE users
+		SET email=#{email}, updatedAt=SYSDATE
+		
+		<if test="profileImage != null">, profileImage=#{profileImage}</if>
+		
+		WHERE userName=#{userName}
+	</update>
+
+	<update id="updatePassword" parameterType="com.example.spring08.dto.UserDto">
+		UPDATE users
+		SET password=#{password}
+		WHERE userName=#{userName}
+	</update>
+
+	<insert id="insert" parameterType="com.example.spring08.dto.UserDto">
+		INSERT INTO users
+		(num, userName, password, email)
+		VALUES(users_seq.NEXTVAL, #{userName}, #{password}, #{email})
+	</insert>
+	
+	<select id="getByNum" parameterType="long" resultType="com.example.spring08.dto.UserDto">
+		SELECT <include refid="columnName"/>
+		FROM users
+		WHERE num=#{num}
+	</select>
+	
+	<select id="getByUserName" parameterType="string" resultType="com.example.spring08.dto.UserDto">
+		SELECT <include refid="columnName"/>
+		FROM users
+		WHERE userName=#{userName}
+	</select>
+</mapper>

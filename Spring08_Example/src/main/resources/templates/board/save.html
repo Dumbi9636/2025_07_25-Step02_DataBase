@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>/board/save.html</title>
+</head>
+<body>
+	<div class="container">
+		<script>
+			alert("저장했습니다");
+			location.href="[[@{/board/view(num=${dto.num})}]]";
+		</script>
+	</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>/templates/home.html</title>
+</head>
+<body>
+	<div class="container">
+	
+	
+		<div sec:authorize="isAuthenticated()">
+			<strong sec:authentication="name"></strong>님 로그인중...
+			<br />
+			<!-- 
+				Spring Security가 세션에 저장해둔 로그인 사용자 정보를 꺼내서 보여주는 방식 
+			-->
+			<strong>[[${#authentication.principal.username}]]</strong>님 로그인 중 
+			<br />
+			<a th:href="@{/user/logout}">로그아웃</a>
+		</div>
+		
+		
+		<div sec:authorize="!isAuthenticated()">
+			<a th:href="@{/user/loginform}">로그인하러 가기</a>
+		</div>
+		
+		<hr />
+		
+		<h1>인덱스 페이지</h1>
+		<ul>
+			<li><a th:href="@{/study}">공부하러가기</a></li>
+			<li><a th:href="@{/staff/user/list}">회원목록(STAFF, ADMIN 전용)</a></li>
+			<li><a th:href="@{/admin/user/manage}">회원관리(ADMIN 전용)</a></li>
+		</ul>
+		
+		
+	</div>
+</body>
+</html>

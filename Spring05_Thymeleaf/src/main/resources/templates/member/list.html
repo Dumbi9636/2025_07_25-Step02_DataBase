@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>templates/member/list.html</title>
+</head>
+<body>
+	<div class="container">
+		<h1>회원 목록 입니다</h1>
+		<table>
+			<thead>
+				<tr>
+					<th>번호</th>
+					<th>이름</th>
+					<th>주소</th>
+					<th>자세히 보기</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--/* 
+					"list" 라는 키값으로 List<MemberDto> 가 담겨 있기 때문에 
+					tmp 는 MemberDto type 이다	
+				 */-->
+			    <tr th:each="tmp : ${list}">
+			        <td>[[${tmp.num}]]</td>
+			        <td>[[${tmp.name}]]</td>
+			        <td th:text="${tmp.addr}"></td>
+			        <!-- 자세히 보기라는 링크를 걸려면 어떻게 해야할까 -->
+			        <td>
+			        	<a th:href="@{/member/detail(num=${tmp.num})}">바로가기</a>
+			        </td>
+			    </tr>
+			</tbody>
+		</table>
+	</div>
+	<a th:href="@{/}">인덱스로</a>
+</body>
+</html>

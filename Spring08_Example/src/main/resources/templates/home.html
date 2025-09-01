@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>/templates/home.html</title>
+<!-- /*
+	/include/resource.html 페이지 안에 있는 bootstrap 이라는 이름의 조각을 여기에 insert 하기
+*/ -->
+<th:block th:insert="/include/resource :: bootstrap"></th:block>
+</head>
+<body>
+	<!--/*index 페이지에서 navbar 를 include 했다는 의미에서 nav() 에 'index' 전달 */-->
+	<th:block th:insert="/include/navbar :: nav('index')"></th:block>
+	<div class="container">
+
+		<h1> 인덱스 페이지</h1>  
+		
+		<h2> 공지사항 </h2>
+		<ul>
+			<li th:each="tmp : ${notice}">[[${tmp}]]</li>
+		</ul>
+		
+		<p>
+			userName : <strong>[[${#authentication.name}]]</strong>
+		</p>
+		<p>
+			userName : <strong sec:authentication="name"></strong>
+		</p>
+		<p>
+			userName : <strong th:text="${#authentication.name}"></strong>
+		</p>
+		<!--/* 로그인 했을때만 특정 요소를 렌더링 하는 방법*/-->
+		<p sec:authorize="isAuthenticated()"> 로그인 중이네요!</p>
+		<p th:if="${#authentication.name != 'anonymousUser'}">로그인 중이네요!</p>
+		<!--/* 로그인을 하지 않았을때 특정 요소를 렌더링 하는 방법 */-->
+		<p sec:authorize="!isAuthenticated()"> 로그인을 하지않았습니다</p>
+	</div>
+	
+	
+	<th:block th:insert="~{/include/footer :: footer}"></th:block>
+</body>
+</html>

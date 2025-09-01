@@ -1,11 +1,26 @@
 package com.example.spring03.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class FortuneController {
+	/*	
+	 * HttpservletReqeust 는 HTTP 의 모든 기능을 다루는 객체
+	 * Model 은 view page 로 넘길 데이터만 담는 객체 ( 더 편리하게 사용할 수 있다) 
+	 * Model 객체도 컨트롤러 메소드의 매개변수에 선언만하면 자동으로 spring 이 전달해 준다. 
+	 */
+	@GetMapping("/fortune2")
+	public String fortune2(Model model) {
+		String fortune = "토요일 제발 비오지마라! 토요일 제발 비오지마라!";
+		
+		// Model 객체에 담으면 자동으로 HttpServletReqeust 객체에 담긴다
+		model.addAttribute("fortune", fortune);
+	
+		return "fortune";
+	}
 	
 	@GetMapping("/fortune")
 	public String fortune(HttpServletRequest request) {

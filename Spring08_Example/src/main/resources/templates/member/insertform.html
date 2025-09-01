@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/templates/member/insertform.html</title>
+<th:block th:insert="~{/include/resource :: bootstrap}"></th:block>
+</head>
+<body>
+	<th:block th:insert="/include/navbar :: nav('index')"></th:block>
+	
+	<h1>회원 추가 양식</h1>
+	<div class="container">
+		<form th:action="@{/member/insert}" method="post">
+			<div>
+				<label for="name">이름</label>
+				<input type="text" name="name" id="name" />
+			</div>
+			<div>
+				<label for="addr">주소</label>
+				<input type="text" name="addr" id="addr"  />
+			</div>
+			<button type="submit">추가</button>
+			<button type="button" th:onclick="|location.href='@{/member/list}'|">취소</button>
+		</form>
+	</div>
+	
+	<th:block th:insert="~{/include/footer :: footer}"></th:block>
+</body>
+</html>

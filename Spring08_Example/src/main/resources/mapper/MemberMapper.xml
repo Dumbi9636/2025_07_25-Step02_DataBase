@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.spring08.repository.MemberMapper">
+	<!-- insert 문 -->
+	<!-- selectKey 를 이용하면 insert문 실행 전에 시퀀스로 얻어내지는 pk값을 미리 얻어내서 MemberDto 객체에 담을 수 있다. -->
+	<!-- keyProperty="num" 여기에서 num 과 MemberDto 의 필드명과 일치하면 된다. -->
+	<!-- 
+			@Mapper 어노테이션이 붙어있는 인터페이스의 전체 패키지명, 인터페이스의 이름을 namespace 에 명시하고
+			
+			public void insert(MemberDto dto);
+			
+			에서 메소드명과 xml 문서의 sql id 를 일치시킨다. 
+			
+			매개변수에 선언한 데이터의 type 이 parameterType 이 된다. 
+			
+			select 라면 generic type 이 resultType이 된다. 
+		 -->
+	<insert id="insert" parameterType="memberDto">
+		<selectKey keyProperty="num" resultType="int" order="BEFORE">
+			SELECT member_seq.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO member
+		(num, name, addr)
+		VALUES(#{num}, #{name}, #{addr})
+	</insert>
+</mapper>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<th:block th:insert="~{/include/resource :: bootstrap}"></th:block>
+<th:block th:insert="~{/include/resource :: toastui}"></th:block>
+<title>/board/edit.html</title>
+</head>
+<body>
+	<th:block th:insert="/include/navbar :: nav('board')"></th:block>
+	
+	<div class="container pt-3 pb-3">
+		<nav aria-label="breadcrumb">
+		  <ol class="breadcrumb">
+		    <li class="breadcrumb-item"><a th:href="@{/}">Home</a>
+		    </li>
+		    <li class="breadcrumb-item"><a th:href="@{/board/list}">Board</a>
+		    </li>
+		    <li class="breadcrumb-item active">Edit</li>
+		  </ol>
+		</nav>
+		
+		<h1>글 수정 페이지</h1>
+		<form class="pt-3 pb-3" th:action="@{/board/update}" method="post" id="editForm">
+			<div>
+				<label class="form-label" for="num">글번호</label>
+				<input class="form-control" type="text" name="num" id="num" 
+					th:value="${dto.num}" readonly/>
+			</div>
+			<div>
+				<label class="form-label" for="writer">작성자</label>
+				<input class="form-control" type="text" name="writer" id="writer"
+					th:value="${dto.writer}" readonly/>
+			</div>
+			<div>
+				<label class="form-label " for="title">제목</label>
+				<input class="form-control " type="text" name="title" id="title"
+					th:value="${dto.title}"/>
+			</div>
+			<div>
+				<label class="form-label pt-3 pb-3" for="editor">내용</label>
+				<br />
+				<div id="editor"></div>
+				<textarea class="form-control d-none" name="content" 
+				id="hiddenContent" th:utext="${dto.content}" hidden></textarea> <!-- form 안에 숨겨진 textarea (hiddenContent)를 만들어둠 -->
+				
+			</div>
+			<div class="text-end pt-3">
+				<button class="btn btn-warning">수정확인</button>
+				<a th:href="@{/board/view(num=${dto.num})}" class="btn btn-secondary">취소</a>
+			</div>
+		</form>
+	</div>
+	<script>
+		// 위에 toast ui javascript 가 로딩 되어 있으면 toastui.Editor 클래스를 사용할수 있다
+		// 해당 클래스를 이용해서 객체 생성하면서 {} object 로 ui 에 관련된 옵션을 잘 전달하면
+		// 우리가 원하는 모양의 텍스트 편집기를 만들수 있다
+		const editor = new toastui.Editor({
+			el: document.querySelector('#editor'),
+		    height: '500px',
+		    initialEditType: 'wysiwyg',
+		    previewStyle: 'vertical',
+		    language: 'ko',
+		    initialValue: document.querySelector("#hiddenContent").value // toastui.Editor의 initialValue를 이 textarea의 value로 채움
+		});
+		
+		document.querySelector("#editForm").addEventListener("submit", (e)=>{
+			//에디터로 작성된 문자열 읽어오기
+			const content = editor.getHTML(); // 글 수정 완료 → submit 시점에 editor 내용을 다시 textarea에 집어넣음
+			//테스트로 콘솔에 출력하기
+			console.log(content);
+			//에디터로 작성된 문자열을 폼 전송이 될수 있도록 textarea 의 value 로 넣어준다.
+			document.querySelector("#hiddenContent").value=content;
+			
+			//테스트 하기 위해 폼 전송 막기
+			//e.preventDefault();
+			
+			//폼전송을 막지 않으면 전송이 된다.
+		});	
+	</script>
+	
+	<th:block th:insert="~{/include/footer :: footer}"></th:block>
+</body>
+</html>

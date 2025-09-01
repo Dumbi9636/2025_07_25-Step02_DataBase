@@ -1,0 +1,12 @@
+<!-- templates/include/navbar.html 페이지 내용 -->
+<ul th:fragment="myNav(thisPage)" class="nav nav-tabs">
+	<li class="nav-item">
+		<a th:classappend="${thisPage == 'home' ? 'active' : null}" class="nav-link" href="#">홈</a>
+	</li>
+	<li class="nav-item">
+		<a th:classappend="${thisPage == 'game' ? 'active' : null}" class="nav-link" href="#">게임</a>
+	</li>
+	<li class="nav-item">
+		<a th:classappend="${thisPage == 'study' ? 'active' : null}" class="nav-link" href="#">공부</a>
+	</li>
+</ul>

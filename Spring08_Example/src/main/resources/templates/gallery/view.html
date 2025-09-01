@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>/gallery/view.html</title>
+<th:block th:insert="~{/include/resource :: bootstrap}"></th:block>
+</head>
+<body>
+	<th:block th:insert="~{/include/navbar :: nav('board')}"></th:block>
+
+		<div class="card shadow">
+			<!-- 작성자 정보 -->
+			<div class="card-header d-flex align-items-center">
+				
+					<i th:if="${res.dto.profileImage == null}" style="font-size:50px;" class="bi bi-person-circle"></i>
+					
+					<img th:unless="${res.dto.profileImage == null}" 
+						 th:src="@{/upload/{file}(file=${res.dto.profileImage})}" 
+						style="width:100px;height:100px;border-radius:50%;"/>
+				
+				<strong class="ms-3" th:text="${res.dto.writer}"></strong>
+				<span class="text=muted ms-autro" th:text="${res.dto.createdAt}"></span>
+			</div>
+		</div>
+		<!-- 본문 -->
+		<div class="card-body">
+			<h5 class="card-title" th:text="${res.dto.title}"></h5> 
+			<!--/*
+			textarea 로 입력한 글에서 개행기호는 br 요소로 변경해서 출력하기
+			HTML에서 그냥 개행 문자를 출력하면 줄바꿈이 되지 않고 띄어쓰기처럼 보임. (HTML은 연속된 공백/엔터를 하나의 공백으로 처리하기 때문)
+		 *  그래서 화면에 줄바꿈을 제대로 표현하려면, 개행 문자를 <br> 태그로 변환해야 함.
+			*/-->
+			<p class="card-text">[(${res.dto.content})]</p>
+			<div class="row">
+				<div th:each="tmp : ${res.images}" class="col-md-6">
+					<img th:src="@{/upload/{name}(name=${tmp.saveFileName})}" class="img=fluid rounded" alt="photo" />
+				</div>
+			</div><!-- .row -->
+		</div> <!-- .card -->
+		<!--/* 
+			commentUi( '카테고리명', ${원글의번호}, ${원글의작성자}, ${댓글목록}) 을 전달하면
+			댓글 관련 UI 가 여기에 랜더링된다. 
+		*/-->
+		<th:block th:insert="~{/include/comment :: commentUi('gallery', ${res.dto.num}, ${res.dto.writer}, ${res.commentList})}"></th:block>
+	
+	<th:block th:insert="~{/include/footer :: footer}"></th:block>
+</body>
+</html>

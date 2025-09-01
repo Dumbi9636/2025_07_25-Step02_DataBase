@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>templates/save.html</title>
+</head>
+<body>
+	<div class="container">
+		<h1>입력한 내용 확인</h1>
+		<form>
+			<div>
+				아이디 <input type="text" th:value="${dto.userName}" />
+			</div>
+			<div>
+				취미
+				<select>
+					<option value="">선택</option>
+					<option value="piano" th:selected="${dto.hobby == 'piano'}">피아노</option>
+					<option value="game" th:selected="${dto.hobby == 'game'}">게임</option>
+					<option value="etc" th:selected="${dto.hobby == 'etc'}">기타</option>
+				</select>
+			</div>
+			<div>
+				성별
+				<label>
+					<input type="radio" th:checked="${dto.gender == 'man'}" /> 남
+				</label>
+				<label>
+					<input type="radio" th:checked="${dto.gender == 'woman'}" /> 여
+				</label>
+			</div>
+			<div>
+				하고싶은말
+				<textarea th:text="${dto.comment}" cols="30" rows="5"></textarea>
+			</div>
+		</form>
+		
+		
+		<h1>입력한 내용 확인2</h1>
+		
+		<!--/* dto 라는 키값으로 전달된 객체를 form 요소(div 등 다른 요소도 가능) 에 바인딩  */-->
+		<form th:object="${dto}">
+			<div>
+				<!--/* 
+					*{userName} 은 바인딩된 dto 객체의 userName 이라는 필드의 값을 활용하는 표현식  
+					필드명으로 가져다 쓸 수 있다. id="userName" name="userName" 자동 생성됨	
+				*/-->
+				아이디 <input type="text" th:field="*{userName}" />
+			</div>
+			<div>
+				취미
+				<select th:field="*{hobby}">
+					<option value="">선택</option>
+					<option value="piano" >피아노</option>
+					<option value="game">게임</option>
+					<option value="etc">기타</option>
+				</select>
+			</div>
+			<div>
+				성별
+				<label>
+					<input type="radio" value="man" th:field="*{gender}" /> 남
+				</label>
+				<label>
+					<input type="radio" value="woman" th:field="*{gender}" /> 여
+				</label>
+			</div>
+			<div>
+				하고싶은말
+				<textarea th:field="*{comment}" cols="30" rows="5"></textarea>
+			</div>
+			
+			<a th:href="@{/}">인덱스로 돌아가기</a>
+	</div>
+</body>
+</html>

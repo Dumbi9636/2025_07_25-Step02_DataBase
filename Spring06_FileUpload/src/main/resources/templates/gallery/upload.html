@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/gallery/upload.html</title>
+</head>
+<body>
+	<div class="container">
+		<h1>이미지 업로드 결과</h1>
+		<p>
+			설명 : <strong th:text="${caption}"></strong>
+		</p>
+		<p>
+			저장된 파일명 : <strong th:text="${saveFileName}"></strong>
+		</p>
+		<!--  <img src="/spring06/upload/xxx.png" /> -->
+		<br />
+		<!-- 싱글따옴표로 감싸서 문자열로 만들어서 + 를 해야한다 이는 위의 img 경로와 동일한 결과를 출력 -->
+		<img th:src="@{'/upload/' + ${saveFileName}}" />
+		<br />
+		<!-- <img src="@{/upload}{fileName}(fileName=${saveFileName})" />  -->
+	</div>
+</body>
+</html>

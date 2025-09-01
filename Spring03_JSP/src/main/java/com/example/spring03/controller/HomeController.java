@@ -4,12 +4,15 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import jakarta.servlet.http.HttpServletRequest;
-
+/*	@Contorller 어노테이션이 붙어 있기 때문에 spring 은 new HomeController() 해서 객체를 생성한 다음 
+ * 
+ *  spring bean container 에서 직접 관리한다.
+ *  
+ *  또한 @Controller 어노테이션이 붙은 객체는 클라이언트의 요청을 처리하는 특별한 객체이기 때문에 해당 동작을 하기위한
+ *  준비 작업도 이루어진다. (@Component 는 그저 bean 으로 만들기 위함. @Controller 는 특별한 기능(동작)을 하기위함이다.)
+ */
 @Controller
 public class HomeController {
-	
-	
-	
 	/* http://localhost:9000/
 	 * 위에 처럼 이서버의 최상위(root) 경로 요청이 왔을때 요청을 처리할 컨트롤러 메소드 
 	 */

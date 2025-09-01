@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>templates/user/info.html</title>
+<th:block th:insert="/include/resource :: bootstrap"></th:block>
+</head>
+<body>
+<div class="container">
+		<h1 class="mt-2 mb-3">회원 가입 정보</h1>
+		<table class="table table-bordered table-striped">
+			<tr>
+				<th>아이디</th>
+				<td>[[${dto.userName}]]</td>
+			</tr>
+			<tr>
+				<th>비밀번호</th>
+				<td>
+					<a th:href="@{/user/edit-password}">수정하기</a>
+				</td>
+			</tr>
+			<tr>
+				<th>이메일</th>
+				<td>[[${dto.email}]]</td>
+			</tr> 
+			<tr>
+				<th>프로필 이미지</th>
+				<td >
+					<i th:if="${dto.profileImage == null}" 
+					style="font-size:100px;" 
+					class="bi bi-person-circle"></i>
+					
+					<img th:unless="${dto.profileImage == null}" 
+					th:src="@{/upload/{name}(name=${dto.profileImage})}" 
+					style="width:100px;height:100px;border-radius:50%;"/>
+				</td>
+			</tr>
+			<tr>
+				<th>최종 수정 날짜</th>
+				<td>[[${dto.updatedAt}]]</td>
+			</tr>
+			<tr>
+				<th>가입 날짜</th>
+				<td>[[${dto.createdAt}]]</td>
+			</tr>
+		</table>
+		<a th:href="@{/user/edit}">개인 정보 수정(이메일,  프로필사진)</a>
+		<br />
+		<a class="mt-3 mb-3" th:href="@{/}">홈으로...</a>
+	</div>
+</body>
+</html>

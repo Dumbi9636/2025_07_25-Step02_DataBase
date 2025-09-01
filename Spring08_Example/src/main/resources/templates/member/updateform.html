@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/templates/member/updateform.html</title>
+<th:block th:insert="/include/resource :: bootstrap"></th:block>
+</head>
+<body>
+	<th:block th:insert="/include/navbar :: nav('index')"></th:block>
+	<h1>회원정보 수정폼</h1>
+	<form th:action="@{/member/update}" method="post">
+		<input type="hidden" name="num" th:value="${dto.num }" />
+		
+		<div>
+			<label for="name">이름</label>
+			<input type="text" name="name" id="name" th:value="${dto.name }" />
+		</div>
+		<div>
+			<label for="addr">주소</label>
+			<input type="text" name="addr" id="addr" th:value="${dto.addr }" />
+		</div>
+		<button type="submit" class="submit">수정 확인</button>
+		<button type="button" class="reset" th:onclick="|location.href='@{/member/list}'|">취소</button>
+	</form>
+	
+	<th:block th:insert="~{/include/footer :: footer}"></th:block>
+</body>
+</html>

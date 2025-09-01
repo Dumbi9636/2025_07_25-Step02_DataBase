@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>/templates/include/navbar.html</title>
+</head>
+<body>
+	<nav th:fragment="nav(thisPage)" class="navbar navbar-expand-md bg-warning">
+		<div class="container">
+			<a class="navbar-brand fw-bolder" th:href="@{/}">Acorn</a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNav">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav me-auto"> <!-- me-auto 는 ul 요소의 마진을 필요한 만큼 가지겠다는 의미 -->
+					<li class="nav-item">
+						<a class="nav-link fw-bolder" 
+						th:classappend="${thisPage == 'member' ? 'active' : null}"
+						th:href="@{/member/list }">Member</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link fw-bolder" 
+						th:classappend="${thisPage == 'book' ? 'active' : null}"
+						th:href="@{/book/list}">Book</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link fw-bolder" 
+						th:classappend="${thisPage == 'board' ? 'active' : null}"
+						th:href="@{/board/list}">Board</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link fw-bolder" 
+						th:classappend="${thisPage == 'gallery' ? 'active' : null}"
+						th:href="@{/gallery/list}">gallery</a>
+					</li>
+				</ul>
+				
+				
+				 <!-- 오른쪽 사용자 메뉴 -->
+	            <ul class="navbar-nav">
+	            	<!--  th:if, th:unless 대신에 sec:authorize="isAuthenticated()" 를 사용할 수도 있다. -->
+	            	<!-- /* 로그인했을때 출력할 내용 */ -->
+	            	<th:block sec:authorize="isAuthenticated()">
+		            	<li class="nav-item  me-2">
+						    <a class="nav-link  p-0"
+						       th:href="@{/user/info}">
+						        <strong sec:authentication="name"></strong>
+						    </a>
+						</li>
+		                <li class="nav-item me-2">
+		                    <span class="navbar-text fw-bolder">Signed in</span>
+		                </li>
+		                <li class="nav-item">
+		                    <a class="btn btn-secondary btn-sm"
+		                      th:href="@{/user/logout}">로그아웃</a>
+		                </li>
+	            	</th:block>
+	            	
+	            	<!-- /* 로그인하지 않았을때 출력할 내용 */ -->
+	            	<th:block sec:authorize="!isAuthenticated()">
+	            	<li class="nav-item">
+	                    <a class="btn btn-secondary btn-sm me-2 fw-bolder "
+	                       th:href="@{/user/loginform}">로그인</a>
+	                </li>
+	                <li class="nav-item">
+	                    <a class="btn btn-dark btn-sm"
+	                       th:href="@{/user/signup-form}">회원가입</a>
+	                </li>
+	            	</th:block>
+             
+                </ul>
+			</div>
+		</div>
+	</nav>
+</body>
+</html>

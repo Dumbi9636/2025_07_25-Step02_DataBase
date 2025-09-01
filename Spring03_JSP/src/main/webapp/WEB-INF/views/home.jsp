@@ -18,6 +18,7 @@
 		 --%>
 		<ul>
 			<li><a href="${pageContext.request.contextPath }/fortune">오늘의 운세</a></li>
+			<li><a href="${pageContext.request.contextPath }/fortune2">내일의 운세</a></li>
 		</ul>
 		<h2>공지사항</h2>
 		<ul>

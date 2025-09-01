@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>templates/member/delete.html</title>
+<th:block th:insert="/include/resource"></th:block>
+</head>
+<body>
+	 <script th:inline="javascript">
+	 	alert("[[${param.num}]] 번 [[${param.name}]]님의 정보를 삭제했습니다");	 
+	 	location.href=/*[[@{/member/list}]]*/ [];
+	 </script>
+</body>
+</html>

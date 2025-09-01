@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>templates/include-test.html</title>
+<th:block th:insert="/include/resource"></th:block>
+</head>
+<body>
+	<!-- /* /include/header.html 페이지에서 myHeader 라는 fragment 를 여기에 출력하기 */ -->
+	<th:block th:insert="/include/header :: myHeader"></th:block>
+	
+	<div class="container">
+		<h1>include 테스트</h1>
+		<th:block th:insert="/include/navbar :: myNav('home')"></th:block>
+		<th:block th:insert="/include/navbar :: myNav('game')"></th:block>
+		<th:block th:insert="/include/navbar :: myNav('study')"></th:block>
+	</div>
+	<a th:href="@{/}">인덱스로 가기</a>
+
+</body>
+</html>

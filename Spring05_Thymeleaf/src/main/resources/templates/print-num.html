@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/templates/print-num.html</title>
+</head>
+<body>
+	<div class="container">
+		<h1>1~10 까지 출력하기</h1>
+		<!--/* 
+			#numbers 는 Thymeleaf 에서 제공하는 유틸리티 객체   
+			- 숫자 관련 기능을 제공
+			- 원하는 범위의 숫자 생성, 포맷팅, 계산 등을 수행한다. 
+			
+			#numbers.sequence(시작값, 끝값, 중감값)
+		*/-->
+		<ul>
+			<li th:each="tmp : ${#numbers.sequence(1, 10)}">[[${tmp}]]</li>
+		</ul>
+		<h1>Model 에 담긴 값을 활용해서 숫자 출력</h1>
+		<ul>
+			<li th:each="tmp: ${#numbers.sequence(start, end)}">[[${tmp}]]</li>
+		</ul>
+		<h1>숫자 format</h1>
+		<p>	가격	: <strong th:text="${#numbers.formatInteger(10000000,1,'COMMA')}"></strong> 원</p>
+	</div>
+</body>
+</html>

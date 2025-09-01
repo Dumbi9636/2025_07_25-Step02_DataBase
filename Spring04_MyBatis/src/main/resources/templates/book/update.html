@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/templates/book/update.html</title>
+</head>
+<body>
+<div class="container">
+		<p>
+			<strong>[[${param.num }]]</strong>번 <strong>[[${param.title }]]</strong> 의 정보를 수정했습니다 
+			<a th:href="@{/book/list}">목록보기</a>
+		</p>
+</div>
+</body>
+</html>

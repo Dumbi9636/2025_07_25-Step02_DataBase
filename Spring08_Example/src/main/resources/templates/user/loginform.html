@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>templates/loginform.html</title>
+<th:block th:insert="~{/include/resource :: bootstrap}"></th:block>
+</head>
+<body>
+	<th:block th:insert="~{/include/navbar :: nav('board')}"></th:block>
+	
+	<h3 class="mt-5 mb-5 text-center">로그인 폼</h3>
+	<form th:action="@{/user/login}" method="post" class="text-center">
+		<input type="text" name="userName" placeholder="사용자명..."/>
+		<input type="password" name="password" placeholder="비밀번호..."/>
+		<button type="submit">로그인</button>
+	</form>
+	
+	<th:block th:insert="~{/include/footer :: footer}"></th:block>
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>/templates/unescape.html</title>
+</head>
+<body>
+	<div class="container">
+		<h3>목록입니다</h3>
+		<div>[[${content}]]</div>
+		
+		<h3>목록입니다2</h3>
+		<div th:text="${content}"></div>
+		
+		<h3>목록입니다3</h3>
+		<div>[(${content})]</div>
+		
+		<h3>목록입니다4</h3>
+		<div th:utext="${content}"></div>
+	</div>
+</body>
+</html>

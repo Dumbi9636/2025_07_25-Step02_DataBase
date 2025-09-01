@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>/board/view.html</title>
+<th:block th:insert="~{/include/resource :: bootstrap}"></th:block>
+<style>
+  /* 대댓글 초기 비표시 */
+  .re-re { display: none; }
+</style>
+</head>
+<body>
+	<th:block th:insert="/include/navbar :: nav('board')"></th:block>
+	
+	<!--/* bradcrumb */-->
+	<div class="container pt-3 pb-3">
+		<nav aria-label="breadcrumb">
+		  <ol class="breadcrumb">
+		    <li class="breadcrumb-item">
+		    	<a th:href="@{/}">Home</a>
+		    </li>
+		    <li class="breadcrumb-item">
+		   		<a th:href="@{/board/list}">Board</a>
+		    </li>
+		    <li class="breadcrumb-item active">Detail</li>
+		  </ol>
+		</nav>
+		<h1>게시글 상세보기</h1>
+		<!--/*
+			th:if="${message != null}"
+			th:if="${!#strings.isEmpty(message)}"
+			대신에
+			th:if="${message}" 로 사용하면 편리하다
+			만일 message 가 존재한다면 이라고 읽으면 된다. 
+		*/-->
+		<p th:if="${message}" class="alert alert-success p-3">[[${message}]]</p>
+		
+		<!-- /*
+		Thymeleaf view page 에서 요청 파리미터로 전달되었던 값도 추출할 수 있다
+		${param.파라미터명}
+		${#strings} 는 문자열에 관련된 유틸리티 객체를 활용할 수 있다
+		${!#strings.imEmpty(pram.search)} 는 search 라는 파라미터명으로 전달된 값이 있는지 확인한다
+		*/ -->
+		<p th:if="${!#strings.isEmpty(param.search)}" 
+				class="alert alert-info px-3 py-2 rounded-3 shadow-sm">
+				<i class="bi bi-search me-2"></i>
+				<strong>[[${param.search}]]</strong> 조건
+				<strong>[[${param.keyword}]]</strong> 검색 결과 입니다
+		</p>
+		<table class="table table-bordered  border-dark">
+			<colgroup>
+				<col class="col-2" />
+				<col class="col" />
+			</colgroup>
+				<tr>
+					<th >글번호</th>
+					<td th:text="${dto.num}"></td>
+				</tr>
+				<tr>
+					<th>작성자</th>
+					<td>
+					    <!-- 프로필 이미지 없는 경우 -->
+					    <i th:if="${dto.profileImage == null}" 
+					       style="font-size:100px;" 
+					       class="bi bi-person-circle"></i>
+					
+					    <!-- 프로필 이미지 있는 경우 -->
+					    <img th:unless="${dto.profileImage == null}" 
+					         th:src="@{/upload/{img}(img=${dto.profileImage})}" 
+					         style="width:100px;height:100px;border-radius:50%;"/>
+					
+					    <!--작성자-->
+					    [[${dto.writer}]]
+					</td>
+				</tr>
+				<tr>
+					<th>제목</th>
+					<td> <!-- 타임리프는 자동 escape 가 된다. -->
+					[[${dto.title}]]
+					</td>
+				</tr>
+				<tr>
+					<th>조회수</th>
+					<td> 
+					[[${dto.viewCount}]]
+					</td>
+				</tr>
+				<tr>
+					<th>작성일</th>
+					<td>
+					[[${dto.createdAt}]]
+					</td>
+				</tr>
+		</table>
+		<!--/* 
+			클라이언트가 작성한 글 제목이나 내용을 그대로 클라이언트에게 출력하는것은 javascript 주입 공격을 받을 수 있다
+			따라서 해당 문자열은 escape 해서 출력하는것이 안전하다 
+		*/-->
+		<div class="card mt-4">
+			<div class="card-header bg-warning">
+				<strong>본문 내용</strong>
+			</div>
+			<!--/* 
+			Thymeleaf가 XSS 방지 때문에 escape 해서 &lt;img src="..."&gt;
+			이런 문자열로 나오니까 이미지가 안 보이고, 문자열만 길게 보인다 따라서 
+			[[...]] 대신 th:utext (unescaped text)를 쓰거나 [(${ })]를 사용해야한다. 
+			*/-->
+			<div class="card-body p-1 border border-dark" th:utext="${dto.content}"></div>
+		</div>
+		
+		<div th:if="${dto.writer == #authentication.name}">
+		   <div class="text-end pt-3">
+		      <a class="btn btn-warning" th:href="@{/board/edit(num=${dto.num})}">수정</a>
+		      <a class="btn btn-secondary" th:href="@{/board/delete(num=${dto.num})}">삭제</a>
+		   </div>
+		</div>
+         
+         <th:block th:insert="~{/include/comment :: commentUi('board', ${dto.num}, ${dto.writer}, ${commentList})}"></th:block>
+         
+	</div><!-- .container -->
+		<div class="text-center mt-2">
+		  <!-- 다음 글 -->
+		  <a class="btn btn-warning btn-sm"
+		     th:classappend="${dto.prevNum == 0 ? 'disabled' : ''}"
+		     th:href="@{|/board/view?num=${dto.prevNum}${query}|}">
+		    <i class="bi bi-arrow-left"></i>
+		    다음 글
+		  </a>
+		
+		  <!-- 이전 글 -->
+		  <a class="btn btn-warning btn-sm"
+		     th:classappend="${dto.nextNum == 0 ? ' disabled' : ''}"
+		     th:href="@{|/board/view?num=${dto.nextNum}${query}|}">
+		    이전 글
+		    <i class="bi bi-arrow-right"></i>
+		  </a>
+	</div>
+    
+    <th:block th:insert="~{/include/footer :: footer}"></th:block>
+</body>
+</html>

@@ -18,35 +18,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name="MEMBER_INFO") // 이 클래스가 JPA 가 관리할 엔티티 객체임을 선언 
+@Entity(name="MEMBER_INFO") // 이 클래스가 JPA 가 관리할 엔티티 객체임을 선언 필드명과 name 이 일치한다면 name 속성은 생략이 가능함
 public class Member {
 	// num 이라는 필드에 대해서 2개의 어노테이션 추가 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer num;
+	@GeneratedValue(strategy = GenerationType.AUTO) // GenerationType.Auto 는 자동으로 num 을 넣어줌(시퀀스 생성, 시퀀스를 만들지 않아도 자동으로 증가되는 숫자값을 넣을수도 있다.)
+	private Integer num; // num 은 PK로 설정됨
 	
 	
 	private String name;
 	private String addr;
 	
-	
-	// dto 를 Entity 로 변경하는 메소드
-	public static Member toEntity(MemberDto dto) {
-		
-		/*
-		 *	Member entity 의 num 이라는 필드에 값이 null 이어야지
-		 *	
-		 *	.save() 할 때 새로운 row 가 추가된다. 
-		 *
-		 *  따라서 dto 에 num 이 만일 0 이면 0 을 넣는 것이 아니고 null 을 넣어줘야 .save() 가 
-		 *  우리가 의도한 바 대로 동작한다. 0 이라면 save 가 아닌 update 를 시도하게 된다.
-		 */
-		
-		return Member.builder()
-			.num(dto.getNum() == 0 ? null : dto.getNum())
-			.name(dto.getName())
-			.addr(dto.getAddr())
-			.build();
-	}
-	 
 }

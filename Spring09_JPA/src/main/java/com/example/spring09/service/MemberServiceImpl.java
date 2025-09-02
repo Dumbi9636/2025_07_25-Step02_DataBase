@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor // lombok 이 생성자를 자동으로 만들어주도록 한다.
 public class MemberServiceImpl implements MemberService {
 	
-	// JPA Repository 의존 객체 주입
+	// JPA Repository 주입 (생성자주입)
 	private final MemberRepository memberRepo;
 	
 	
@@ -105,7 +105,7 @@ public class MemberServiceImpl implements MemberService {
 		 *  - Entity 의 id 필드에 해당하는 정보가 DB 에 이미 존재하면 update 된다. 
 		 * 	- save() 는 추가와 수정의 겸용 
 		 */
-		memberRepo.save(Member.toEntity(dto));
+		memberRepo.save(dto.toEntity()); // entity 객체에 toEntity 메소드를 만들었었는데 MemberDto 로 옮김
 		
 	}
 	

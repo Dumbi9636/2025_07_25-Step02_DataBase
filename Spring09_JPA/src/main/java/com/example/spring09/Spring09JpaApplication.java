@@ -20,7 +20,7 @@ public class Spring09JpaApplication {
 	 */
 	//의존객체 주입 받기 
 	@Autowired
-	EntityManagerFactory emf;
+	EntityManagerFactory emf; 
 	
 	@Autowired
 	MemberRepository memberRepo;

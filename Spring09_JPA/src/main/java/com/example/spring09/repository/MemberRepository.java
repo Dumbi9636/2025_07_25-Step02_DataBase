@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 /*
  *  JpaRepository 인터페이스를 상속받은 인터페이스를 정의하는것 만으로 구현클래스가 만들어지고
  *  해당 클래스로 생성된 객체가 bean 으로 관리가 된다. 
- *  Dao 가 자동으로 만들어진다고 생각하면 된다. 이 객체가 필요한 곳은 service 단이다. 
+ *  Dao 가 자동으로 만들어진다고 생각하면 된다. 이 객체가 필요한 곳은 service 단이다. Application 에서도 Repository 를 주입받아서 사용한다(테스트). 
  *  
  *  ex) class xxx implements MemberRepository 가 만들어지고 자연스럽게 객체가 생성되고 spring bean container 에서 관리가되며
  *  필요한 곳에서 의존객체 주입을 받아서 사용한다. 그 주입받는 곳은 service 이다. 
@@ -19,7 +19,7 @@ import org.springframework.data.jpa.repository.Query;
  *  
  *  @mapper 어노테이션을 인터페이스에다가 붙이는 것만으로 구현클래스가 만들어지고 해당 클래스의 객체가 bean으로 관리되는것과 같다. 
  *  
- *  extends JpaRepository< Entity 클래스명 , 해당 Entity 에서 PK 의 data type > 
+ *  extends JpaRepository< Entity 클래스명 , 해당 Entity 에서 PK 의 data type(id 역할) > 
  */
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 	/*

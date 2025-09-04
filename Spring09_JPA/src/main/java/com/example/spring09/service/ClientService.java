@@ -19,4 +19,7 @@ public interface ClientService  {
 	
 	/** 생일 입력/수정 (개인정보 수정) */
 	void updateBirthday(Long num, LocalDate birthday);
+	
+	/** 전체 수정(이름과 생일) */
+	void update(ClientDto dto);
 }

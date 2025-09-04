@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>/depts/detail.html</title>
+<th:block th:insert="~{/include/resource :: bootstrap}"></th:block>
+</head>
+<body>
+	<div class="container my-5">
+
+    <h2 class="mb-4">부서 상세 정보</h2>
+
+    <div class="card shadow-sm rounded-3">
+        <div class="card-header bg-secondary text-white">
+            <strong th:text="${dept.dname}"></strong>
+            <span class="ms-2">(부서번호: <span th:text="${dept.deptno}"></span>)</span>
+        </div>
+        <div class="card-body">
+            <p><strong>부서명:</strong> <span th:text="${dept.dname}"></span></p>
+            <p><strong>지역:</strong> <span th:text="${dept.loc}"></span></p>
+        </div>
+        <div class="card-footer text-end">
+            <a th:href="@{/depts}" class="btn btn-outline-secondary">목록으로</a>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

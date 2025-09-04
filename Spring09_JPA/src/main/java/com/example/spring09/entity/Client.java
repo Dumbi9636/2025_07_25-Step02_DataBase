@@ -38,6 +38,8 @@ public class Client {
 	@UpdateTimestamp // 최초 수정되는 시점의 시간이 자동으로 들어가도록 하는 어노테이션
 	private LocalDateTime updatedAt;
 	
+	
+	
 	// 생일
 	@Column(nullable = true) // 처음에는 비워두었다가 나중에 입력 가능하도록
 	private LocalDate birthday;

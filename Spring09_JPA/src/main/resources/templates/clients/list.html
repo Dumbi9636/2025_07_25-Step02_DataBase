@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>/templates/clients/list.html</title>
+<th:block th:insert="~{include/resource :: bootstrap}"></th:block>
+</head>
+<body>
+	<div class="container py-5">
+		<div class="d-flex justify-content-between mb-3">
+			<h3>고객 목록</h3>
+			<a class="btn btn-primary" th:href="@{/clients/new}"> 고객 목록 추가</a>
+		</div>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>번호</th>
+					<th>이름</th>
+					<th>생일</th>
+					<th>등록일</th>
+					<th>자세히</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="tmp : ${clients}">
+					<td th:text="${tmp.num}"></td>
+					<td th:text="${tmp.userName}"></td>
+					<td th:text="${tmp.birthday}"></td>
+					<!--/*
+						#temporals.format() 함수를 이용해서 날짜 format 을 만든다. 
+						이처럼 우리가 원하는 형식으로 구성할 수 있다. 
+						yyyy: 년, MM : 월 , dd : 일, hh: 12시간 표기, mm: 분, ss:초 
+						'yyyy년 mm월 dd일 HH:mm'
+						'yyyy-mm-dd HH:mm'
+					*/-->
+					<td th:text="${#temporals.format(tmp.createdAt, 'yyyy년 MM월 dd일 HH시:mm분')}"></td>
+					<td>
+						<a th:href="@{|/clients/${tmp.num}|}"> 보기 </a>
+						<a th:href="@{/}" class="btn btn-secondary">인덱스로 가기</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

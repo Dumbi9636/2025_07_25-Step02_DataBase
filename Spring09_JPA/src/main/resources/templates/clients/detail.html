@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<th:block th:insert="/include/resource :: bootstrap"></th:block>
+<title>/clients/detail.html</title>
+</head>
+<body>
+	<div class="container">
+		<!-- ${message} 가 있을때만, 즉 새로 회원가입을 한 경우에만 출력할 요소 -->
+		<p th:if="${message}" class="alert alert-success">[[${message}]]</p>
+		<h3 class="mt-3 mb-3">고객 상세 정보</h3>
+		<!-- th:object 의 ${clientDto} 값을 바인딩할때는 *{} 이다 -->
+		<table class="table table-bordered" th:object="${clientDto}">
+			<tbody>
+				<tr>
+					<th>번호</th>
+					<td>[[*{num}]]</td>
+				</tr>
+				<tr>
+					<th>이름</th>
+					<td>[[*{userName}]]</td>
+				</tr>
+				<tr>
+					<th>생일</th>
+					<td>[[*{birthday}]]</td>
+				</tr>
+				<tr>
+					<th>수정일</th>
+					<td th:text="*{#temporals.format(updatedAt, 'yy년 MM월 dd일 HH시 mm분')}"></td>
+				</tr>
+				<tr>
+					<th>등록일</th>
+					<td th:text="*{#temporals.format(createdAt, 'yy년 MM월 dd일 HH시 mm분')}"></td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="mt-3">
+			<a th:href="@{/clients}" class="btn btn-secondary">목록으로</a>
+			<a th:href="@{|/clients/${clientDto.num}/edit|}" class="btn btn-primary">수정</a>
+		</div>
+	</div>
+</body>
+</html>

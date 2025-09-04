@@ -68,4 +68,16 @@ public class ClientServiceImpl implements ClientService {
 		// 생일 날짜를 넣어준다
 		entity.setBirthday(birthday); // entity 를 수정하는 것만으로 자동으로 반영된다.
 	}
+
+	
+	
+	@Transactional
+	@Override
+	public void update(ClientDto dto) {
+		// 번호를 이용해서 entity 를 갖고온다.
+		Client entity = clientRepo.findById(dto.getNum()).get();
+		// 이름과 생일을 수정
+		entity.setUserName(dto.getUserName());
+		entity.setBirthday(dto.getBirthday());
+	}
 }

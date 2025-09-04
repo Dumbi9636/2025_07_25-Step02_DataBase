@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>/emps/detail.html</title>
+<th:block th:insert="~{/include/resource :: bootstrap}"></th:block>
+</head>
+<body>
+	<div class="container my-5">
+
+    <!-- 제목 -->
+    <h2 class="mb-4">사원 상세 정보</h2>
+
+    <!-- 사원 카드 -->
+    <div class="card shadow-lg rounded-3">
+        <div class="card-header bg-primary text-white">
+            <strong th:text="${emp.ename}"></strong>
+            <span class="ms-2 text-light">(사원번호: <span th:text="${emp.empno}"></span>)</span>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <h5 class="card-title">기본 정보</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">직책: <span th:text="${emp.job}"></span></li>
+                        <li class="list-group-item">상사번호: <span th:text="${emp.mgr}"></span></li>
+                        <li class="list-group-item">입사일: <span th:text="${#temporals.format(emp.hiredate, 'yyyy-MM-dd')}"></span></li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="card-title">급여 정보</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">급여: <span th:text="${emp.sal}"></span></li>
+                        <li class="list-group-item">커미션: 
+                            <span th:text="${emp.comm != null ? emp.comm : '-'}"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr>
+
+            <h5 class="card-title">부서 정보</h5>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">부서번호: <span th:text="${emp.deptno}"></span></li>
+                <li class="list-group-item">부서명: <span th:text="${emp.dname}"></span></li>
+                <li class="list-group-item">지역: <span th:text="${emp.loc}"></span></li>
+            </ul>
+        </div>
+        <div class="card-footer text-end">
+            <a th:href="@{/emps}" class="btn btn-secondary">목록으로</a>
+        </div>
+    </div>
+
+</div>
+
+	
+</body>
+</html>

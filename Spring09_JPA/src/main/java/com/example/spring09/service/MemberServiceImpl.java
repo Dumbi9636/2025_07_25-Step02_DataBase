@@ -1,13 +1,18 @@
 package com.example.spring09.service;
 
+import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.spring09.dto.MemberDto;
+import com.example.spring09.dto.MemberListRequest;
+import com.example.spring09.dto.MemberPageResponse;
 import com.example.spring09.repository.MemberRepository;
 import com.example.spring09.entity.Member;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +21,11 @@ import lombok.RequiredArgsConstructor;
 @Service // 서비스 클래스에 붙여줄 어노테이션
 @RequiredArgsConstructor // lombok 이 생성자를 자동으로 만들어주도록 한다.
 public class MemberServiceImpl implements MemberService {
+	
+	// 한페이지에 몇개의 row 를 출력할 것인지에 대한 값 
+	final int PAGE_ROW_COUNT=10;
+	// 페이징 처리 UI 에 페이지 번호를 몇개씩 출력할지에 대한 값 
+	final int PAGE_DISPLAY_COUNT=5;
 	
 	// JPA Repository 주입 (생성자주입)
 	private final MemberRepository memberRepo;
@@ -97,7 +107,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Transactional
 	@Override
-	public void addMember(MemberDto dto) {
+	public MemberDto addMember(MemberDto dto) {
 		/*
 		 *  dto 를 Entity 로 변경해서 save() 메소드에 전달하면 된다.
 		 *  
@@ -105,7 +115,11 @@ public class MemberServiceImpl implements MemberService {
 		 *  - Entity 의 id 필드에 해당하는 정보가 DB 에 이미 존재하면 update 된다. 
 		 * 	- save() 는 추가와 수정의 겸용 
 		 */
-		memberRepo.save(dto.toEntity()); // entity 객체에 toEntity 메소드를 만들었었는데 MemberDto 로 옮김
+		// insert or update  된 entity 를 리턴해준다. 
+		Member m = memberRepo.save(dto.toEntity()); // entity 객체에 toEntity 메소드를 만들었었는데 MemberDto 로 옮김
+		// memberDto 의 num 이 integer(참조데이터 타입) 이기에 null 일 수도있다.  
+		// 방금 추가한 회원의 정보를 리턴해준다. 
+		return MemberDto.toDto(m);
 		
 	}
 	
@@ -131,15 +145,83 @@ public class MemberServiceImpl implements MemberService {
 
 	@Transactional
 	@Override
-	public void deleteMember(int num) {
+	public MemberDto deleteMember(int num) {
+		
 		// 만일 삭제할 entity 가 존재하지 않으면 
 		if(!memberRepo.existsById(num)) {
 			throw new IllegalArgumentException("삭제할 회원이 존재하지 않아요 num="+num);
 		}
+		
+		Member m = memberRepo.findById(num).get();
 		// 번호를 이용해서 삭제(실패시 예외가 발생하지는 않는다)
 		memberRepo.deleteById(num);
-		
-		
+		//방금 삭제한 회원의 정보를 리턴해준다.(삭제할 회원의 정보를 m 에 담아서 삭제 후 리턴)
+		return MemberDto.toDto(m);
 	}
 	
+	
+	@Override
+	public MemberPageResponse getPage(MemberListRequest request) {
+		// 페이지 번호
+		int pageNum = request.getPageNum();
+		
+		// (1)num 에 대해서 내림차순 정렬하겠다는 Sort 객체 
+		Sort sort = Sort.by(Sort.Direction.DESC, "num");
+		
+		// (2)pageNum 과 page row count 와 정렬 객체(sort)를 전달해서 원하는 PageRequest 를 만들어내고
+		// 1을빼주는 이유는 시작할때 내부 시스템적으론 0페이지로 시작, 우리가 생각하는 1페이지는 곧 0페이지로 계산해줘야한다.
+		PageRequest pageRequest  = PageRequest.of(pageNum-1, PAGE_ROW_COUNT, sort);
+
+		// (3)org.springframework.data.domain 패키지의 Page type 을 import 해야한다 
+		String keyword = request.getKeyword();
+		Page<Member> page = null;
+		// 만일 키워드가 비었으면 모든 회원정보중에서 원하는 페이지의 결과 얻어내기 
+		if(keyword == null || keyword.isEmpty()) { // keyword 가 null 이면 isEmpty()를 호출할수 없어서, keyword==null || 처럼 null 체크를 해줘야함
+			page=memberRepo.findAll(pageRequest);
+		}else { // 키워드가 있으면 키워드에 해당하는 결과 얻어내기 
+			// if 문 안에 if 문은 가독성이 떨어져서 switch 문으로 작성함
+			/*	 
+			 	 검색조건으로 분기한다 
+			 	 
+				 키워드: 무엇을 찾을 것인가 (검색어)
+				 검색조건: 어디서 찾을 것인가 (검색 대상 필드)
+				 그래서 분기문을 keyword 로 나눌 필요는 없고, 검색조건(condition) 으로 나누는 게 맞다 ✔
+			 */
+			switch(request.getCondition()) {
+				case "name" :
+					page = memberRepo.findByNameContaining(keyword, pageRequest);
+					break;
+				case "addr" :
+					page = memberRepo.findByAddrContaining(keyword, pageRequest);
+					break;
+				case "name_addr" :
+					page = memberRepo.findByNameContainingOrAddrContaining(keyword, keyword, pageRequest);
+					break;
+			}
+		}
+
+		
+		// (4)Page 객체(Page<Member>)를 stream 으로 만들어서 dto 의 List 를 얻어낸다
+		List<MemberDto> list = page.stream().map(MemberDto ::toDto).toList();
+		
+		//하단 시작 페이지 번호 
+		int startPageNum = 1 + ((pageNum-1)/PAGE_DISPLAY_COUNT)*PAGE_DISPLAY_COUNT;
+		//하단 끝 페이지 번호
+		int endPageNum=startPageNum+PAGE_DISPLAY_COUNT-1;
+		//전체 페이지의 갯수 구하기 (Page 객체에 이미 계산되어서 들어 있다)
+		int totalPageCount=page.getTotalPages();
+		//끝 페이지 번호가 이미 전체 페이지 갯수보다 크게 계산되었다면 잘못된 값이다.
+		if(endPageNum > totalPageCount){
+			endPageNum=totalPageCount; //보정해 준다. 
+		}
+		
+		// Entity 의 Stream 을 Dto 의 Stream 으로 만드는것
+		return MemberPageResponse.builder()
+				.list(list)
+				.PageNum(pageNum)
+				.totalPageCount(totalPageCount)
+				.startPageNum(startPageNum)
+				.endPageNum(endPageNum)
+				.build();
+	}
 }

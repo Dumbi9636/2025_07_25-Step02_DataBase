@@ -15,5 +15,6 @@ public interface EmployService {
 	public EmpDeptDto getEmpDetail(int empno);
 	// 부서 정보
 	public DeptDto getDeptDetail(int deptno);
-	
+	// deptno 를 반환해서 empList를 찾는 메소드
+	public List<EmpDto> getEmpListByDeptno(int deptno);
 }

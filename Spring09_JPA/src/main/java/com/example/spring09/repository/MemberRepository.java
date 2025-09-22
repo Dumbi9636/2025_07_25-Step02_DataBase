@@ -4,6 +4,8 @@ import com.example.spring09.entity.Member;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -22,9 +24,20 @@ import org.springframework.data.jpa.repository.Query;
  *  extends JpaRepository< Entity 클래스명 , 해당 Entity 에서 PK 의 data type(id 역할) > 
  */
 public interface MemberRepository extends JpaRepository<Member, Integer> {
-	/*
-	 * 	미리 정해진 형식으로 메소드를 만들면 알아서 정렬된다.
-	 * 	findAllByOrderByNumDesc()
+	
+	
+	// 약속된 형식으로 메소드명을 만들어놓고 키워드를 select 하면 내부적으로 알아서 찾아온다(name, addr, name or addr)
+	// name 검색 메소드
+	public Page<Member> findByNameContaining(String keyword, Pageable pageable);
+	// addr 검색 메소드
+	public Page<Member> findByAddrContaining(String keyword, Pageable pageable);
+	// name or addr  검색 메소드 (name 과 addr 2개를 전달해야해서 keyword 매개변수가 2개 들어간다) 
+	public Page<Member> findByNameContainingOrAddrContaining(String keyword, String keyword2, Pageable pageable);
+	
+	
+	/* <약속된 규칙>
+	 * 미리 정해진 형식으로 메소드를 만들면 알아서 정렬된다.
+	 * findAllByOrderByNumDesc()
 	 * findAllByOrderByNumAsc()
 	 * findAllByOrderByNameDesc()
 	 * findAllByOrderByAddrDesc()
@@ -33,6 +46,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 	 * findAllByOrderBy칼럼명Desc()
 	 * 칼럼명을 Camel Case 로 작성하면 된다.
 	 */
+	
 	
 	public List<Member> findAllByOrderByNumDesc();
 	public List<Member> findAllByOrderByNameAsc();
@@ -45,6 +59,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 	 */
 	@Query("SELECT m FROM MEMBER_INFO m ORDER BY m.num DESC")
 	public List<Member> findAllQuery(); // 메소드명은 마음대로 지을 수 있음.
+	
 	
 	/*
 	 * 	특정 DB 에서만 실행될 수 있는 원래의 query 문을 실행할수도 있다.

@@ -47,7 +47,7 @@ public class ClientController {
 	//의존객체
 	private final ClientService clientService;
 	
-	// 고객 목록 띄우기
+	// @고객 목록 띄우기
 	@GetMapping("/clients")
 	public String list(Model model) {
 		//응답에 필요한 데이터를 Model 객체에 담는다
@@ -56,7 +56,7 @@ public class ClientController {
 		// view page 에서 응답 
 		return "clients/list";
 	}
-	// 고객 추가 요청 폼 띄우기
+	// @고객 추가 요청 폼 띄우기
 	@GetMapping("/clients/new")
 	public String newForm(Model model) {
 		if (!model.containsAttribute("clientDto")) {
@@ -78,7 +78,7 @@ public class ClientController {
 		
 		@Valid 로 검증을 한 dto 매개변수 선언 바로 뒤에 BindingResult 매개변수를 선언해야 한다. 
 	 */
-	// 고객 추가 요청 처리
+	// @고객 추가 요청 처리
 	@PostMapping("/clients")
 	public String create(@Valid ClientDto dto, BindingResult br, RedirectAttributes ra) {
 		//폼 입력 내용중에 에러가 있는지(검증조건을 통과하지 못했는지) 여부를 알아내서
@@ -114,7 +114,7 @@ public class ClientController {
 		return "redirect:/clients/"+num;
 	}
 	
-	// 고객정보 상세보기 요청 처리
+	// @고객정보 상세보기 요청 처리 
 	@GetMapping("/clients/{num}") // 그때그때 다른 경로변수인 num 을 선언하고 
 	public String detail(@PathVariable Long num, Model model) { // 매개변수 num 이
 		model.addAttribute("clientDto", clientService.getClient(num)); // attribute 에 담겨져서  
@@ -145,7 +145,7 @@ public class ClientController {
 		if(hasError) {
 			ra.addFlashAttribute("org.springframework.validation.BindingResult.clientDto", br);
 			ra.addFlashAttribute("clientDto", dto);
-			// 수정폼으로 닷 ㅣ리다일렉트
+			// 수정폼으로 다시 리다일렉트
 			return "redirect:/clients/"+num+"/edit";
 	}
 		

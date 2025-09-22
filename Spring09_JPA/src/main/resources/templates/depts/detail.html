@@ -23,7 +23,13 @@
             <a th:href="@{/depts}" class="btn btn-outline-secondary">목록으로</a>
         </div>
     </div>
-
+	
+	<h2 class="mt-3 mb-3">부서에서 근무하는 사원 목록 <span class="text-primary">[[${empList.size()}]]</span>명</h2>
+	<ul>
+		<li th:each="tmp : ${empList}">
+			<a th:href="@{|/emps/${tmp.empno}|}">[[${tmp.ename}]]</a>
+		</li>
+	</ul>
 </div>
 </body>
 </html>

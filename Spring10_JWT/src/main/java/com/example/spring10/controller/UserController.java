@@ -36,7 +36,17 @@ public class UserController {
 	public final AuthenticationManager authManager; // AuthenticationManager 는 인증(Authentication)을 총괄하는 핵심 인터페이스
 	public final UserService userService;
 	
-	
+	// 회원정보 수정 요청 처리
+	// multipart/form-data 요청이기 때문에 @ResponseBody 어노테이션을 붙이지 않는다 Json 을 보내는게 아니기 때문( 파일 업로드 처리 )
+	@PatchMapping("/user")
+	public ResponseEntity<Void> update(UserDto dto){
+		// userName 은 전송이 안되기 때문에 spring security 로 부터 얻어내기 
+		String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+		dto.setUserName(userName);
+		// service 에서 update 를 처리
+		userService.updateUser(dto);
+		return ResponseEntity.noContent().build();
+	}
 
 	
 	// 회원가입 요청처리

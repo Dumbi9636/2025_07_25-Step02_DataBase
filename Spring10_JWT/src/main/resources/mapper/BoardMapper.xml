@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+	<!--  sql id ="" 를 통해 sql 문을 저장해놓고 필요할때마다 <include refid=" "/> 로 불러서 사용할 수 있다 -->
+	<sql id="search">
+		<choose>
+			<when test="search == 'writer'">
+				WHERE writer LIKE '%' || #{keyword} || '%'
+			</when>
+			<when test="search == 'title'">
+				WHERE title LIKE '%' || #{keyword} || '%'
+			</when>
+			<when test="search == 'title_content'">
+				WHERE title LIKE '%' || #{keyword} || '%' OR content LIKE '%' || #{keyword} || '%' 
+			</when>
+		</choose>		
+	</sql>
+
+	<!-- 
+		application.properties 파일에 
+		mybatis.type-aliases-package=com.example.spring08.**
+		이 설정 때문에 Dto 클래스의 이름으로 parameterType 혹은 resultType 을 간단이 작성할수 있다.
+		default 동작은 클래명의 첫글자를 소문자로 작성하면 된다
+		다른 이름으로 사용하고 싶으면 @Alias("다른이름") 을 dto 클래스에 작성해서 사용할수 있다. 
+	 -->
+	<select id="selectPage" parameterType="boardDto" resultType="boardDto">
+		SELECT *
+		FROM
+			(SELECT result1.*, ROWNUM AS rnum
+			FROM	
+				(SELECT num, writer, title, viewCount, createdAt
+				FROM board
+				<include refid="search"/>
+				ORDER BY num DESC
+				) result1)
+		WHERE rnum BETWEEN #{startRowNum} AND #{endRowNum}
+	</select>
+	
+
+	<select id="getCount" parameterType="boardDto" resultType="int">
+		SELECT NVL(MAX(ROWNUM), 0) AS count
+		FROM board
+		<include refid="search"/>	
+	</select>
+	
+	<!-- 
+		아래와 같이 insert 를 구성하면 
+		1. insert 문이 실행되기전에 시퀀스 값을 미리 읽어와서 
+		2. parameterType 으로 전달된 boardDto 객체에 담긴다 
+		3. 그런 다음 insert 문이 실행되기 때문에 #{num} 에는 시퀀스로 얻어낸 값이 들어간다 
+	 -->
+	<insert id="insert" parameterType="boardDto">
+		<selectKey keyProperty="num" resultType="int" order="BEFORE">
+			SELECT board_seq.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO board
+		(num, writer, title, content)
+		VALUES(#{num}, #{writer}, #{title}, #{content})
+	</insert>
+	
+	
+	<select id="getByNum" parameterType="int" resultType="boardDto">
+		SELECT *
+		FROM	
+			(SELECT b.num, writer, title, content, viewCount, 
+				TO_CHAR(b.createdAt, 'YY"년" MM"월" DD"일" HH24:MI') AS createdAt, 
+				profileImage,
+				LAG(b.num, 1, 0) OVER (ORDER BY b.num DESC) AS prevNum,
+				LEAD(b.num, 1, 0) OVER (ORDER BY b.num DESC) AS nextNum
+			FROM board b
+			INNER JOIN users u ON b.writer = u.userName) 
+		WHERE num=#{num}	
+	</select>
+	
+	
+	<select id="getByDto" parameterType="boardDto" resultType="boardDto">
+		SELECT *
+		FROM	
+			(SELECT b.num, writer, title, content, viewCount, 
+				TO_CHAR(b.createdAt, 'YY"년" MM"월" DD"일" HH24:MI') AS createdAt, 
+				profileImage,
+				LAG(b.num, 1, 0) OVER (ORDER BY b.num DESC) AS prevNum,
+				LEAD(b.num, 1, 0) OVER (ORDER BY b.num DESC) AS nextNum
+			FROM board b
+			INNER JOIN users u ON b.writer = u.userName
+			<include refid="search"/>
+			) 
+		WHERE num=#{num}	
+	</select>
+	
+	<!-- 글 수정 -->
+	<!-- dto 또는 map 으로 저장된 값을 가져올때는 필드명(dto) 또는 키값(map) 을 가져오고 
+		 파라미터명으로 가져오는 값은 #{} 안에 아무거나 적어도 된다.
+	 -->
+	<update id="update" parameterType="boardDto">
+	    UPDATE board
+	    SET 
+	        title = #{title},
+	        content = #{content}
+	    WHERE num = #{num}
+	</update>
+	
+	<!-- 글 삭제 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM board 
+		WHERE num=#{num}
+	</delete>
+</mapper>

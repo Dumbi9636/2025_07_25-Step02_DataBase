@@ -9,7 +9,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
 @MapperScan(basePackages = "com.example.spring04.mapper")
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.example.spring04")
 public class Spring04MyBatisApplication {
 
 	public static void main(String[] args) {

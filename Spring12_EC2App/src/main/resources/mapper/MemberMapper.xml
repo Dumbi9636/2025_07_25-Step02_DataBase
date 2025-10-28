@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<!-- 
+		이 xml 문서의 namespace : member
+		실행할 sql 문의 id : insert 
+		parameter 로 전달되는 데이터 type : MemberDto 
+		#{name} : MemberDto 객체의 getName() 메소드를 호출해서 리턴되는 값을 해당 위치에 바인딩해준다.
+		#{addr} : MemberDto 객체의 getAddr() 메소드를 호출해서 리턴되는 값을 해당 위치에 바인딩해준다. 
+		따라서 name, addr 는 dto 객체의 필드명과 일치시켜야 한다. 
+		
+		parameter로 memberDto로 가져와서 아래의 dao sql 문을 사용한다
+	 -->
+	 
+	 <!-- @Alias("memberDto") 로 설정한 type 의 별칭을 사용할 수 있다. -->
+	 <!-- select 문 -->
+	 <select id="selectAll" resultType="memberDto">
+	 	SELECT num, name, addr
+	 	FROM member
+	 	ORDER BY num ASC
+	 </select>
+	 
+	 
+	 <!-- select 문 -->
+	 <select id="getByNum" parameterType="int" resultType="memberDto">
+	 <!-- 
+	 	MyBatis 에서는 dto에 .set으로 담았던 과정들이 자동화되어있다. 
+	 	  select 된 row 정보를 어떤식으로 담을지 결정해줘야 한다. 결정해주는 속성이 resultType 이다 
+	 	  num, name, addr 이 select 된 상황에서 resultType 을 MemberDto 로 설정하면 
+	 	  select 된 row 하나당(int) MemberDto 객체를 생성해서 setNum(), setName(), setAddr() 메소드를 
+	 	  호출하면서 자동으로 데이터를 담아준다. 
+	 	  단) select 문에 명시한 칼럼명과 dto 의 필드명이 일치해야한다. 
+	 	  select 된 row가 1개면 하나만 생성, row가 여러개면 여러개를 생성 
+	 -->
+	 	SELECT num, name, addr
+	 	FROM member
+	 	WHERE num=#{num}
+	 </select>
+	 
+	 
+	 <!-- delete 문 -->
+	 <delete id="delete" parameterType="int"> <!-- paramter로 번호만 넘겨줌 -->
+	 	DELETE FROM member
+	 	WHERE num=#{num}
+	 </delete>
+	  
+	  
+	<!-- update 문 -->
+	<update id="update" parameterType="memberDto">
+		UPDATE member
+		SET name=#{name}, addr=#{addr}
+		WHERE num=#{num}
+	</update>
+	
+		
+	<!-- insert 문 -->
+	<insert id="insert" parameterType="memberDto">
+		
+		<!-- selectKey 를 이용하면 insert문 실행 전에 시퀀스로 얻어내지는 pk값을 미리 얻어내서 MemberDto 객체에 담을 수 있다. -->
+		<!-- keyProperty="num" 여기에서 num 과 MemberDto 의 필드명과 일치하면 된다. -->
+		<selectKey keyProperty="num" resultType="int" order="BEFORE">
+			SELECT member_seq.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		INSERT INTO member
+		(num, name, addr)
+		VALUES(#{num}, #{name}, #{addr})
+	</insert>
+</mapper>

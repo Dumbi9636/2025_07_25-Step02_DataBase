@@ -62,9 +62,7 @@
 	<select id="getByNum" parameterType="int" resultType="boardDto">
 		SELECT *
 		FROM	
-			(SELECT b.num, writer, title, content, viewCount, 
-				TO_CHAR(b.createdAt, 'YY"년" MM"월" DD"일" HH24:MI') AS createdAt, 
-				profileImage,
+			(SELECT b.num, writer, title, content, viewCount, b.createdAt, profileImage,
 				LAG(b.num, 1, 0) OVER (ORDER BY b.num DESC) AS prevNum,
 				LEAD(b.num, 1, 0) OVER (ORDER BY b.num DESC) AS nextNum
 			FROM board b
@@ -76,8 +74,7 @@
 	<select id="getByDto" parameterType="boardDto" resultType="boardDto">
 		SELECT *
 		FROM	
-			(SELECT b.num, writer, title, content, viewCount, 
-				TO_CHAR(b.createdAt, 'YY"년" MM"월" DD"일" HH24:MI') AS createdAt, 
+			(SELECT b.num, writer, title, content, viewCount, b.createdAt, 
 				profileImage,
 				LAG(b.num, 1, 0) OVER (ORDER BY b.num DESC) AS prevNum,
 				LEAD(b.num, 1, 0) OVER (ORDER BY b.num DESC) AS nextNum

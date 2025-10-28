@@ -1,6 +1,10 @@
 package com.example.spring10.dto;
 
+import java.time.LocalDateTime;
+
 import org.apache.ibatis.type.Alias;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,7 +25,10 @@ public class BoardDto {
 	private String title;
 	private String content;
 	private int viewCount;
-	private String createdAt;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy년 MM월 dd일 HH:mm")
+	private LocalDateTime createdAt;
+	
 	// 페이징 처리를 위한 필드
 	private int startRowNum;
 	private int endRowNum;

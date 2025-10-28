@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.spring04.mapper.AttendanceMapper">
+
+    <!-- 출근 등록 (하루 1회 제한 예시) -->
+    <insert id="insertCheckIn">
+        INSERT INTO attendance (emp_id, checkin_time, work_date)
+        VALUES (#{empId}, SYSDATE, TRUNC(SYSDATE))
+    </insert>
+
+    <!-- 퇴근 시간 업데이트 -->
+    <update id="updateCheckOut">
+        UPDATE attendance
+        SET checkout_time = SYSDATE
+        WHERE emp_id = #{empId}
+          AND work_date = TRUNC(SYSDATE)
+          AND checkout_time IS NULL
+    </update>
+</mapper>

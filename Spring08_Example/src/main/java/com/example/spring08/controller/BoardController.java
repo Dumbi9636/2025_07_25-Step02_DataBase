@@ -126,8 +126,7 @@ public class BoardController {
 	 *  defaultValue 를 설정할 수 있다. 
 	 */
 	public String list(Model model, 
-		   @RequestParam(defaultValue = "1") int pageNum,
-		   BoardDto dto) { // 기존에는 keyword 만 담았는데, 검색 조건을 dto 에 필드로 추가해서 넣어놨으니, dto를 통해 keyword 와 search 를 동시에 가져올 예정임
+		   @RequestParam(defaultValue = "1") int pageNum, BoardDto dto) { // 기존에는 keyword 만 담았는데, 검색 조건을 dto 에 필드로 추가해서 넣어놨으니, dto를 통해 keyword 와 search 를 동시에 가져올 예정임
 		
 		// BoardDto 객체에는 keyword 와 search 가 있을 수도 있다. ( 없으면 null 이다 )
 		

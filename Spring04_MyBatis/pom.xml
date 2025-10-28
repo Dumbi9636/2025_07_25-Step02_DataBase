@@ -60,6 +60,26 @@
 		    <artifactId>jakarta.servlet.jsp.jstl</artifactId> 
 		</dependency>
 							<!-- 여기까지 -->
+		<!-- JWT library test -->
+		<!-- JWT (io.jsonwebtoken) -->
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-api</artifactId>
+		    <version>0.11.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-impl</artifactId>
+		    <version>0.11.5</version>
+		    <scope>runtime</scope>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-jackson</artifactId> <!-- JSON 파싱용 -->
+		    <version>0.11.5</version>
+		    <scope>runtime</scope>
+		</dependency>
+	
 							
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

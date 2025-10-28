@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<title>resources/static/index.html</title>
+</head>
+<body>
+	<div class="container">
+		<h1>인덱스 페이지 입니다</h1>
+		<input type="text" placeholder="메세지 입력..." id="inputMsg" />
+		<button id="sendBtn">전송</button>
+	</div>
+	
+	<script>
+		// 서버에 웹소켓 접속하기 
+		// websocket 클래스 객체 사용 ( 데이터를 주고 받는 경로 ) /ws 는 사용자정의
+		const socket = new WebSocket("ws://localhost:9000/ws");	
+		socket.onopen = ()=>{
+			console.log("웹소켓 접속");
+		};
+		socket.onmessage = (event)=>{
+			console.log(event.data);
+		};
+		
+		document.querySelector("#sendBtn").addEventListener("click", ()=>{
+			// 입력한 문자열을 읽어와서 
+			const msg = document.querySelector("#inputMsg").value;
+			//WebSocket 객체를 이용해서 서버에 전송한다
+			socket.send(msg);
+		});
+	</script>
+</body>
+</html>

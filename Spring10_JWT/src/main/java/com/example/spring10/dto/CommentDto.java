@@ -20,4 +20,8 @@ public class CommentDto {
 	private String createdAt;
 	private String profileImage; // 프로필이미지를 출력하기 위한 필드 
 	private int replyCount; // 대댓글의 갯수를 저장하기 위한 필드
+	
+	// 댓글 페이징 처리를 위한 필드
+	private int startRowNum;
+	private int endRowNum;
 }

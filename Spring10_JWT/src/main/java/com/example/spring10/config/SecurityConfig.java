@@ -51,10 +51,12 @@ public class SecurityConfig {
 		.authorizeHttpRequests(config ->
 		// 리턴값
 			config
+				// 화이트리스트에 담는것 뿐만 아니라, 특정 메소드의 특정 경로만 허용하게 할 수 있다. 
 				.requestMatchers(whiteList).permitAll() // 화이트 리스트에 있는 것은 모두 통과 
 				.requestMatchers("/admin/**").hasRole("ADMIN") // admin 으로 시작하는 요청은 "ADMIN" 이라는 Role이 있어야한다 
 				.requestMatchers("/staff/**").hasAnyRole("ADMIN", "STAFF") // staff 로 시작하는 요청은 admin 이나 staff 를 가지고 있어야한다 
 				.requestMatchers(HttpMethod.POST, "/v1/user", "/v1/login").permitAll() //api 회원가입 요청은 받아들이도록 메소드 별로 세분화가능(여기서는 post 요청,인 경우 v1/user, v1/login)이 맞을때 토오가 
+				.requestMatchers(HttpMethod.GET, "/v1/board", "/v1/board/**").permitAll()	
 				.anyRequest().authenticated()
 		)
 		// 세션을 사용하지 않는다는것은 서버가 클라이언트를 기억하지 않겠단 의미 

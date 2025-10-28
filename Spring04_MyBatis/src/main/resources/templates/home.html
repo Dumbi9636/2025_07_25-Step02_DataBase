@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>/templates/home.html</title>
-<th:block th:insert="/include/resource"></th:block>
+<th:block th:replace="~{include/resource :: fragment}"></th:block>
 </head>
 <body>
 	<div class="container mt-5">
